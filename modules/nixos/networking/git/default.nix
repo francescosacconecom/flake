@@ -58,14 +58,6 @@
         inherit (config.modules.networking.git) stagit;
       in
       lib.mkIf stagit.enable {
-        paths.git-repositories = {
-          enable = true;
-          wantedBy = [ "multi-user.target" ];
-          pathConfig = {
-            PathChanged = "/srv/git";
-            Unit = "stagit.service";
-          };
-        };
         services.stagit = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
