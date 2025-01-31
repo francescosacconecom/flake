@@ -11,6 +11,7 @@
     ./networking/nginx
     ./networking/openssh
     ./networking/searx
+    ./networking/syncthing
     ./system/sudo
     ./system/tlp
   ];
