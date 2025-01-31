@@ -82,6 +82,38 @@
               data = "2001:1600:13:101::16e3";
             }
 
+            # Notes
+            {
+              name = "notes";
+              inherit ttl;
+              class = "IN";
+              type = "A";
+              data = "193.108.52.52";
+            }
+            {
+              name = "notes";
+              inherit ttl;
+              class = "IN";
+              type = "AAAA";
+              data = "2001:1600:13:101::16e3";
+            }
+
+            # Music
+            {
+              name = "music";
+              inherit ttl;
+              class = "IN";
+              type = "A";
+              data = "193.108.52.52";
+            }
+            {
+              name = "music";
+              inherit ttl;
+              class = "IN";
+              type = "AAAA";
+              data = "2001:1600:13:101::16e3";
+            }
+
             # Email
             {
               name = "mx";
@@ -151,6 +183,15 @@
               };
             };
           };
+          "music.${bind.domain}" = {
+            root = "/var/lib/syncthing/music";
+            ssl = {
+              enable = true;
+              acme = {
+                email = "admin@${bind.domain}";
+              };
+            };
+          };
           "notes.${bind.domain}" = {
             root = "/var/lib/syncthing/notes";
             ssl = {
@@ -178,19 +219,21 @@
         announce = {
           enable = true;
         };
-        folders = let
-          devices = [
-            "AXH5A4N-C5MEHNR-AKFFXUO-CRNLEFI-XAGJ23U-25MIBSG-2WHJMZO-K35GHQF"
-            "EWZK7V3-2LU7653-G25DOIA-KGGTSVR-GOHDYLU-F7EHMPQ-5P2OPUR-QIHBTAH"
-          ];
-        in {
-          music = {
-            inherit devices;
+        folders =
+          let
+            devices = [
+              "AXH5A4N-C5MEHNR-AKFFXUO-CRNLEFI-XAGJ23U-25MIBSG-2WHJMZO-K35GHQF"
+              "EWZK7V3-2LU7653-G25DOIA-KGGTSVR-GOHDYLU-F7EHMPQ-5P2OPUR-QIHBTAH"
+            ];
+          in
+          {
+            music = {
+              inherit devices;
+            };
+            notes = {
+              inherit devices;
+            };
           };
-          notes = {
-            inherit devices;
-          };
-        };
       };
     };
   };
