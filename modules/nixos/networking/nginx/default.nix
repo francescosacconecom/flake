@@ -109,6 +109,7 @@
           domain: hostConfig:
           if hostConfig.ssl.enable then
             {
+              webroot = "/var/lib/acme/acme-challenge/${domain}";
               inherit (hostConfig.ssl.acme) email;
             }
           else

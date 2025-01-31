@@ -16,8 +16,6 @@
     package = pkgs.iptables;
   };
 
-  security.acme.defaults.webroot = "/var/lib/acme/acme-challenge";
-
   nix = {
     settings = {
       auto-optimise-store = true;
