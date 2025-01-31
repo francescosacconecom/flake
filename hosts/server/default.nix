@@ -115,6 +115,9 @@
       };
       git = {
         enable = true;
+        daemon = {
+          enable = true;
+        };
         stagit = rec {
           enable = true;
           root = "/var/www/git";

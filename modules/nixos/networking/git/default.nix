@@ -12,6 +12,13 @@
       default = false;
       type = lib.types.bool;
     };
+    daemon = {
+      enable = lib.mkOption {
+        description = "Whether to enable Stagit.";
+        default = false;
+        type = lib.types.bool;
+      };
+    };
     stagit = {
       enable = lib.mkOption {
         description = "Whether to enable Stagit.";
@@ -52,6 +59,26 @@
         init.defaultBranch = "master";
       };
     };
+
+    services.gitDaemon =
+      let
+        inherit (config.modules.networking.git) daemon;
+      in
+      lib.mkIf daemon.enable {
+        enable = true;
+        package = pkgs.git;
+
+        user = "git";
+        group = "git";
+        basePath = "/srv/git";
+        exportAll = true;
+
+        port = 9418;
+      };
+
+    networking.firewall.allowedTCPPorts = lib.mkIf config.modules.networking.git.daemon [
+      9418
+    ];
 
     systemd =
       let
