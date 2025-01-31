@@ -160,6 +160,20 @@
           git = root;
         };
       };
+      syncthing = {
+        enable = true;
+        root = "/var/lib/syncthing";
+        announce = {
+          enable = true;
+        };
+        folders = {
+          music = {
+            devices = [
+              "AXH5A4N-C5MEHNR-AKFFXUO-CRNLEFI-XAGJ23U-25MIBSG-2WHJMZO-K35GHQF";
+            ];
+          };
+        };
+      };
     };
   };
 
