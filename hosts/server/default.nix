@@ -151,6 +151,15 @@
               };
             };
           };
+          "notes.${bind.domain}" = {
+            root = "/var/lib/syncthing/notes";
+            ssl = {
+              enable = true;
+              acme = {
+                email = "admin@${bind.domain}";
+              };
+            };
+          };
         };
       };
       openssh.listen = {
@@ -169,12 +178,17 @@
         announce = {
           enable = true;
         };
-        folders = {
+        folders = let
+          devices = [
+            "AXH5A4N-C5MEHNR-AKFFXUO-CRNLEFI-XAGJ23U-25MIBSG-2WHJMZO-K35GHQF"
+            "EWZK7V3-2LU7653-G25DOIA-KGGTSVR-GOHDYLU-F7EHMPQ-5P2OPUR-QIHBTAH"
+          ];
+        in {
           music = {
-            devices = [
-              "AXH5A4N-C5MEHNR-AKFFXUO-CRNLEFI-XAGJ23U-25MIBSG-2WHJMZO-K35GHQF"
-              "EWZK7V3-2LU7653-G25DOIA-KGGTSVR-GOHDYLU-F7EHMPQ-5P2OPUR-QIHBTAH"
-            ];
+            inherit devices;
+          };
+          notes = {
+            inherit devices;
           };
         };
       };
