@@ -43,7 +43,7 @@
   config = lib.mkIf config.modules.networking.git.enable {
     users.users.git = {
       hashedPassword = "!";
-      isNormalUser = true;
+      isSystemUser = true;
       group = "git";
       createHome = true;
       home = "/srv/git";
@@ -76,7 +76,7 @@
         port = 9418;
       };
 
-    networking.firewall.allowedTCPPorts = lib.mkIf config.modules.networking.git.daemon [
+    networking.firewall.allowedTCPPorts = lib.mkIf config.modules.networking.git.daemon.enable [
       9418
     ];
 
