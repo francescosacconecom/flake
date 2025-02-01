@@ -14,7 +14,7 @@
     };
     daemon = {
       enable = lib.mkOption {
-        description = "Whether to enable Stagit.";
+        description = "Whether to enable Git daemon.";
         default = false;
         type = lib.types.bool;
       };
