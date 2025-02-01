@@ -46,10 +46,6 @@
         monospace = "IBM Plex Mono";
       };
     };
-    syncthing = {
-      enable = true;
-      port = 8384;
-    };
   };
 
   home.packages = with pkgs; [

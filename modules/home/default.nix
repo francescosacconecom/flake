@@ -11,6 +11,5 @@
     ./gpg
     ./neovim
     ./sway
-    ./syncthing
   ];
 }
