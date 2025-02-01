@@ -6,7 +6,7 @@
   ...
 }:
 {
-  options.modules.networking.mailserver = rec {
+  options.modules.networking.mailserver = {
     enable = lib.mkOption {
       description = "Whether to enable NixOS Mailserver.";
       default = false;
@@ -20,11 +20,9 @@
       description = "The domain of the MX host.";
       type = lib.types.uniq lib.types.str;
     };
-    acme = {
-      email = lib.mkOption {
-        description = "The email used for CA account creation.";
-        type = lib.types.uniq lib.types.str;
-      };
+    acmeEmail = lib.mkOption {
+      description = "The email used for CA account creation.";
+      type = lib.types.uniq lib.types.str;
     };
     accounts = lib.mkOption {
       description = "For each email address name, its account configuration.";
@@ -94,19 +92,16 @@
           }
         );
 
-      openFirewall = false;
       certificateScheme = "acme-nginx";
+      openFirewall = false;
     };
 
     security.acme = {
       acceptTerms = true;
-      certs.${config.modules.networking.mailserver.hostDomain} = {
-        inherit (config.modules.networking.mailserver.acme) email;
-      };
+      defaults.email = config.modules.networking.mailserver.acmeEmail;
     };
 
     networking.firewall.allowedTCPPorts = [
-      80
       465
       993
     ];
