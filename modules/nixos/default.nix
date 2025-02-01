@@ -2,6 +2,7 @@
 {
   imports = [
     ./bind
+    ./chromium
     ./git
     ./mailserver
     ./monerod

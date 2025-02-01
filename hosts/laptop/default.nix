@@ -6,6 +6,9 @@
 }:
 {
   modules = {
+    chromium = {
+      enable = true;
+    };
     monerod = {
       enable = true;
       mining = {
