@@ -8,7 +8,6 @@
     ./networking/git
     ./networking/mailserver
     ./networking/networkmanager
-    ./networking/nginx
     ./networking/openssh
     ./networking/searx
     ./networking/syncthing
