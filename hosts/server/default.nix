@@ -82,38 +82,6 @@
               data = "2001:1600:13:101::16e3";
             }
 
-            # Notes
-            {
-              name = "notes";
-              inherit ttl;
-              class = "IN";
-              type = "A";
-              data = "193.108.52.52";
-            }
-            {
-              name = "notes";
-              inherit ttl;
-              class = "IN";
-              type = "AAAA";
-              data = "2001:1600:13:101::16e3";
-            }
-
-            # Music
-            {
-              name = "music";
-              inherit ttl;
-              class = "IN";
-              type = "A";
-              data = "193.108.52.52";
-            }
-            {
-              name = "music";
-              inherit ttl;
-              class = "IN";
-              type = "AAAA";
-              data = "2001:1600:13:101::16e3";
-            }
-
             # Email
             {
               name = "mx";
@@ -134,7 +102,7 @@
               inherit ttl;
               class = "IN";
               type = "MX";
-              data = "10 mx.${domain}.";
+              data = "10 ${mailserver.hostDomain}.";
             }
             {
               name = "@";
@@ -158,48 +126,14 @@
         };
       };
       mailserver = {
-        enable = true;
+        enable = false;
         addressDomain = bind.domain;
         hostDomain = "mx.${bind.domain}";
-        acme = {
-          email = "admin@${bind.domain}";
-        };
+        acmeEmail = "admin@${bind.domain}";
         accounts = {
           "francesco" = {
             hashedPassword = "$y$j9T$fM7MqDwT1ViKNurSFijqN0$XoRyKBUzsMt4oigUcWkDQf7cU6JYz5A61wZlQrlannD";
             aliasNames = [ "admin" ];
-          };
-        };
-      };
-      nginx = {
-        enable = true;
-        hosts = {
-          "git.${bind.domain}" = {
-            root = "/var/www/git";
-            ssl = {
-              enable = true;
-              acme = {
-                email = "admin@${bind.domain}";
-              };
-            };
-          };
-          "music.${bind.domain}" = {
-            root = "/var/lib/syncthing/music";
-            ssl = {
-              enable = true;
-              acme = {
-                email = "admin@${bind.domain}";
-              };
-            };
-          };
-          "notes.${bind.domain}" = {
-            root = "/var/lib/syncthing/notes";
-            ssl = {
-              enable = true;
-              acme = {
-                email = "admin@${bind.domain}";
-              };
-            };
           };
         };
       };
