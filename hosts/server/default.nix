@@ -66,22 +66,6 @@
               data = "2001:1600:13:101::16e3";
             }
 
-            # Git
-            {
-              name = "git";
-              inherit ttl;
-              class = "IN";
-              type = "A";
-              data = "193.108.52.52";
-            }
-            {
-              name = "git";
-              inherit ttl;
-              class = "IN";
-              type = "AAAA";
-              data = "2001:1600:13:101::16e3";
-            }
-
             # Email
             {
               name = "mx";
@@ -117,12 +101,6 @@
         enable = true;
         daemon = {
           enable = true;
-        };
-        stagit = rec {
-          enable = true;
-          root = "/var/www/git";
-          logoPng = ./website/logo.png;
-          faviconPng = logoPng;
         };
       };
       mailserver = {
