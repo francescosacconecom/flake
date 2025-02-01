@@ -57,7 +57,9 @@
     helvum
     keepassxc
     libreoffice
+    imv
     monero-gui
+    mpv
     musescore
     qjackctl
     rsync

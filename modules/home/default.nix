@@ -9,7 +9,6 @@
     ./aerc
     ./git
     ./gpg
-    ./mediaViewers
     ./neovim
     ./sway
     ./syncthing
