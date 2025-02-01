@@ -17,7 +17,6 @@
           ttl = 3600;
         in
         [
-          # SOA
           {
             name = "@";
             inherit ttl;
@@ -25,8 +24,6 @@
             type = "SOA";
             data = "ns1.${bind.domain}. admin.${bind.domain}. 2021090101 900 900 2592000 900";
           }
-
-          # Nameserver 1
           {
             name = "@";
             inherit ttl;
@@ -48,8 +45,6 @@
             type = "AAAA";
             data = "2001:1600:13:101::16e3";
           }
-
-          # Apex
           {
             name = "@";
             inherit ttl;
@@ -64,8 +59,6 @@
             type = "AAAA";
             data = "2001:1600:13:101::16e3";
           }
-
-          # Email
           {
             name = "mx";
             inherit ttl;
