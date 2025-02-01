@@ -9,7 +9,6 @@
     ./aerc
     ./git
     ./gpg
-    ./librewolf
     ./mediaViewers
     ./neovim
     ./sway

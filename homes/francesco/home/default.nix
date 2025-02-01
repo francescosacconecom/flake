@@ -38,13 +38,6 @@
         file = ./pgp.asc;
       };
     };
-    librewolf = {
-      enable = true;
-      engine = {
-        name = "Searx";
-        url = "localhost:8888";
-      };
-    };
     mediaViewers.enable = true;
     neovim.enable = true;
     sway = {
