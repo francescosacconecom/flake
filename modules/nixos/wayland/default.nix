@@ -14,7 +14,7 @@
     };
   };
 
-  config = lib.mkIf config.modules.enable {
+  config = lib.mkIf config.modules.wayland.enable {
     services.displayManager = {
       defaultSession = "Sway";
       ly = {

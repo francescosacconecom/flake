@@ -6,7 +6,7 @@
   ...
 }:
 {
-  options.modules.crypto.monerod = {
+  options.modules.monerod = {
     enable = lib.mkOption {
       description = "Whether to enable the Monero daemon.";
       default = false;
@@ -25,16 +25,16 @@
     };
   };
 
-  config = lib.mkIf config.modules.crypto.monerod.enable {
+  config = lib.mkIf config.modules.monerod.enable {
     services.monero = {
       enable = true;
 
       dataDir = "/var/lib/monero";
       mining =
-        if config.modules.crypto.monerod.mining.enable then
+        if config.modules.monerod.mining.enable then
           {
             enable = true;
-            inherit (config.modules.crypto.monerod.mining) address;
+            inherit (config.modules.monerod.mining) address;
             threads = 0;
           }
         else
