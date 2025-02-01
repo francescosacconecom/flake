@@ -66,5 +66,9 @@
           }
         )
       );
+
+      services.sshguard = lib.mkIf listen.enable {
+        enable = true;
+      };
     };
 }
