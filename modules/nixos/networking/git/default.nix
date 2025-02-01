@@ -30,6 +30,7 @@
           group = "git";
           createHome = true;
           home = "/srv/git";
+          shell = "${pkgs.git}/bin/git-shell";
         };
       };
       groups = {
