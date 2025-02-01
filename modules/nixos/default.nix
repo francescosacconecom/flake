@@ -1,7 +1,7 @@
 { ... }:
 {
   imports = [
-    ./crypto/monero
+    ./crypto/monerod
     ./desktop/wayland
     ./multimedia/pipewire
     ./networking/bind

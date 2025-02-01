@@ -2,10 +2,11 @@
   lib,
   options,
   config,
+  pkgs,
   ...
 }:
 {
-  options.modules.crypto.monero = {
+  options.modules.crypto.monerod = {
     enable = lib.mkOption {
       description = "Whether to enable the Monero daemon.";
       default = false;
@@ -24,15 +25,16 @@
     };
   };
 
-  config = lib.mkIf config.modules.crypto.monero.enable {
+  config = lib.mkIf config.modules.crypto.monerod.enable {
     services.monero = {
       enable = true;
 
+      dataDir = "/var/lib/monero";
       mining =
-        if config.modules.crypto.monero.mining.enable then
+        if config.modules.crypto.monerod.mining.enable then
           {
             enable = true;
-            inherit (config.modules.crypto.monero.mining) address;
+            inherit (config.modules.crypto.monerod.mining) address;
             threads = 0;
           }
         else

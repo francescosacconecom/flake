@@ -7,7 +7,7 @@
 {
   modules = {
     crypto = {
-      monero = {
+      monerod = {
         enable = true;
         mining = {
           enable = true;
