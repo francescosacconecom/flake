@@ -5,7 +5,7 @@
   ...
 }:
 {
-  options.modules.multimedia.pipewire = {
+  options.modules.pipewire = {
     enable = lib.mkOption {
       description = "Whether to enable PipeWire.";
       default = false;
@@ -13,7 +13,7 @@
     };
   };
 
-  config = lib.mkIf config.modules.multimedia.pipewire.enable {
+  config = lib.mkIf config.modules.pipewire.enable {
     security.rtkit.enable = true;
     services.pipewire = {
       enable = true;

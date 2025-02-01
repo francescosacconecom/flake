@@ -5,7 +5,7 @@
   ...
 }:
 {
-  options.modules.networking.networkmanager = {
+  options.modules.networkmanager = {
     enable = lib.mkOption {
       description = "Whether to enable NetworkManager.";
       default = false;
@@ -13,7 +13,7 @@
     };
   };
 
-  config = lib.mkIf config.modules.networking.networkmanager.enable {
+  config = lib.mkIf config.modules.networkmanager.enable {
     networking.networkmanager = {
       enable = true;
     };

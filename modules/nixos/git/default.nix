@@ -6,7 +6,7 @@
   ...
 }:
 {
-  options.modules.networking.git = {
+  options.modules.git = {
     enable = lib.mkOption {
       description = "Whether to create the Git user and set up a Git server.";
       default = false;
@@ -21,7 +21,7 @@
     };
   };
 
-  config = lib.mkIf config.modules.networking.git.enable {
+  config = lib.mkIf config.modules.git.enable {
     users = {
       users = {
         git = {
@@ -47,7 +47,7 @@
       };
     };
 
-    services.gitDaemon = lib.mkIf config.modules.networking.git.daemon.enable {
+    services.gitDaemon = lib.mkIf config.modules.git.daemon.enable {
       enable = true;
       package = pkgs.git;
 
@@ -59,7 +59,7 @@
       port = 9418;
     };
 
-    networking.firewall.allowedTCPPorts = lib.mkIf config.modules.networking.git.daemon.enable [
+    networking.firewall.allowedTCPPorts = lib.mkIf config.modules.git.daemon.enable [
       9418
     ];
   };

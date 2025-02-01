@@ -6,7 +6,7 @@
   ...
 }:
 {
-  options.modules.networking.bind = {
+  options.modules.bind = {
     enable = lib.mkOption {
       description = "Whether to enable BIND.";
       default = false;
@@ -48,15 +48,15 @@
     };
   };
 
-  config = lib.mkIf config.modules.networking.bind.enable {
+  config = lib.mkIf config.modules.bind.enable {
     services.bind = {
       enable = true;
       package = pkgs.bind;
 
-      zones.${config.modules.networking.bind.domain} = {
+      zones.${config.modules.bind.domain} = {
         master = true;
         file =
-          config.modules.networking.bind.records
+          config.modules.bind.records
           |> builtins.map (
             {
               name,
@@ -66,13 +66,13 @@
               data,
             }:
             let
-              inherit (config.modules.networking.bind) domain;
+              inherit (config.modules.bind) domain;
               subdomain = if name != "@" then "${name}." else "";
             in
             "${subdomain}${domain}. ${builtins.toString ttl} ${class} ${type} ${data}"
           )
           |> builtins.concatStringsSep "\n"
-          |> pkgs.writeText "${config.modules.networking.bind.domain}";
+          |> pkgs.writeText "${config.modules.bind.domain}";
       };
     };
 

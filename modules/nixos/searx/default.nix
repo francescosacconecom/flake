@@ -5,7 +5,7 @@
   ...
 }:
 {
-  options.modules.networking.searx = {
+  options.modules.searx = {
     enable = lib.mkOption {
       description = "Whether to enable Searx.";
       default = false;
@@ -22,14 +22,14 @@
     };
   };
 
-  config = lib.mkIf config.modules.networking.searx.enable {
+  config = lib.mkIf config.modules.searx.enable {
     services.searx = {
       enable = true;
 
       settings.server = {
         bind_address = "localhost";
-        inherit (config.modules.networking.searx) port;
-        secret_key = config.modules.networking.searx.secretKey;
+        inherit (config.modules.searx) port;
+        secret_key = config.modules.searx.secretKey;
       };
     };
   };

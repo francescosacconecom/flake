@@ -6,7 +6,7 @@
   ...
 }:
 {
-  options.modules.networking.mailserver = {
+  options.modules.mailserver = {
     enable = lib.mkOption {
       description = "Whether to enable NixOS Mailserver.";
       default = false;
@@ -45,11 +45,11 @@
     };
   };
 
-  config = lib.mkIf config.modules.networking.mailserver.enable {
+  config = lib.mkIf config.modules.mailserver.enable {
     mailserver = {
       enable = true;
-      fqdn = config.modules.networking.mailserver.hostDomain;
-      domains = [ config.modules.networking.mailserver.addressDomain ];
+      fqdn = config.modules.mailserver.hostDomain;
+      domains = [ config.modules.mailserver.addressDomain ];
 
       enableImap = false;
       enableImapSsl = true;
@@ -82,13 +82,13 @@
       };
 
       loginAccounts =
-        config.modules.networking.mailserver.accounts
+        config.modules.mailserver.accounts
         |> builtins.mapAttrs (
           name: accountConfig: {
             inherit (accountConfig) hashedPassword;
             aliases =
               accountConfig.aliasNames
-              |> builtins.map (name: "${name}@${config.modules.networking.mailserver.addressDomain}");
+              |> builtins.map (name: "${name}@${config.modules.mailserver.addressDomain}");
           }
         );
 
@@ -98,7 +98,7 @@
 
     security.acme = {
       acceptTerms = true;
-      defaults.email = config.modules.networking.mailserver.acmeEmail;
+      defaults.email = config.modules.mailserver.acmeEmail;
     };
 
     networking.firewall.allowedTCPPorts = [

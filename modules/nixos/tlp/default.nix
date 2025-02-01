@@ -5,7 +5,7 @@
   ...
 }:
 {
-  options.modules.system.tlp = {
+  options.modules.tlp = {
     enable = lib.mkOption {
       description = "Whether to enable TLP.";
       default = false;
@@ -13,7 +13,7 @@
     };
   };
 
-  config = lib.mkIf config.modules.system.tlp.enable {
+  config = lib.mkIf config.modules.tlp.enable {
     services.tlp = {
       enable = true;
     };

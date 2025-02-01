@@ -6,7 +6,7 @@
   ...
 }:
 {
-  options.modules.networking.openssh = {
+  options.modules.openssh = {
     agent = {
       enable = lib.mkOption {
         description = "Whether to enable the OpenSSH agent.";
@@ -33,7 +33,7 @@
 
   config =
     let
-      inherit (config.modules.networking.openssh)
+      inherit (config.modules.openssh)
         agent
         listen
         ;

@@ -6,7 +6,7 @@
   ...
 }:
 {
-  options.modules.networking.syncthing = {
+  options.modules.syncthing = {
     enable = lib.mkOption {
       description = "Whether to enable Syncthing.";
       default = false;
@@ -39,13 +39,13 @@
     };
   };
 
-  config = lib.mkIf config.modules.networking.syncthing.enable {
+  config = lib.mkIf config.modules.syncthing.enable {
     users.users.syncthing = {
       hashedPassword = "!";
       isSystemUser = true;
       group = "syncthing";
       createHome = true;
-      home = config.modules.networking.syncthing.root;
+      home = config.modules.syncthing.root;
     };
 
     users.groups.syncthing = { };
@@ -61,12 +61,12 @@
       relay.enable = false;
       systemService = true;
 
-      dataDir = config.modules.networking.syncthing.root;
+      dataDir = config.modules.syncthing.root;
 
       settings = {
         options =
           let
-            inherit (config.modules.networking.syncthing) announce;
+            inherit (config.modules.syncthing) announce;
           in
           {
             urAccepted = -1;
@@ -76,7 +76,7 @@
             limitBandwidthInLan = false;
           };
         folders =
-          config.modules.networking.syncthing.folders
+          config.modules.syncthing.folders
           |> builtins.mapAttrs (
             folderId: folderConfig: {
               path = "~/${folderId}";
@@ -89,7 +89,7 @@
             }
           );
         devices =
-          config.modules.networking.syncthing.folders
+          config.modules.syncthing.folders
           |> builtins.attrValues
           |> builtins.map (folderConfig: folderConfig.devices)
           |> builtins.concatLists
@@ -109,7 +109,7 @@
         22000
       ]
       ++ (
-        if config.modules.networking.syncthing.announce.enable then
+        if config.modules.syncthing.announce.enable then
           [
             21027
           ]

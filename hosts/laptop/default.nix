@@ -6,41 +6,35 @@
 }:
 {
   modules = {
-    crypto = {
-      monerod = {
+    monerod = {
+      enable = true;
+      mining = {
         enable = true;
-        mining = {
-          enable = true;
-          address = "44UAWDBRoxtXodXboy6LKEjokehoSiHwmNhgSYEvqzbiTmUnvMcNccFNsaAp7GCbDKhu62oeiEuj9HsPtwJi1p9V26ShoDh";
-        };
+        address = "44UAWDBRoxtXodXboy6LKEjokehoSiHwmNhgSYEvqzbiTmUnvMcNccFNsaAp7GCbDKhu62oeiEuj9HsPtwJi1p9V26ShoDh";
       };
     };
-
-    desktop = {
-      wayland.enable = true;
+    wayland = {
+      enable = true;
     };
-
-    multimedia = {
-      pipewire.enable = true;
+    pipewire = {
+      enable = true;
     };
-
-    networking = {
-      networkmanager = {
-        enable = true;
-      };
-      openssh.agent = {
-        enable = true;
-      };
-      searx = {
-        enable = true;
-        port = 8888;
-        secretKey = builtins.getEnv "SEARX_SECRET_KEY";
-      };
+    networkmanager = {
+      enable = true;
     };
-
-    system = {
-      sudo.enable = true;
-      tlp.enable = true;
+    openssh.agent = {
+      enable = true;
+    };
+    searx = {
+      enable = true;
+      port = 8888;
+      secretKey = builtins.getEnv "SEARX_SECRET_KEY";
+    };
+    sudo = {
+      enable = true;
+    };
+    tlp = {
+      enable = true;
     };
   };
 

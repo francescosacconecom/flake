@@ -6,7 +6,7 @@
   ...
 }:
 {
-  options.modules.desktop.wayland = {
+  options.modules.wayland = {
     enable = lib.mkOption {
       description = "Whether to enable Ly and Sway, effectively enabling Wayland.";
       default = false;
@@ -14,7 +14,7 @@
     };
   };
 
-  config = lib.mkIf config.modules.desktop.wayland.enable {
+  config = lib.mkIf config.modules.enable {
     services.displayManager = {
       defaultSession = "Sway";
       ly = {
