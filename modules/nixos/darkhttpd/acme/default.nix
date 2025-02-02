@@ -21,12 +21,12 @@
       type = lib.types.uniq lib.types.str;
     };
     output = {
-      certificate = lib.mkOption {
-        description = "The directory where fetched certificate will reside.";
+      fullChain = lib.mkOption {
+        description = "The symlink to the fetched fullchain.pem file.";
         type = lib.types.uniq lib.types.path;
       };
-      key = lib.mkOption {
-        description = "The directory where fetched key will reside.";
+      privateKey = lib.mkOption {
+        description = "The symlink to the fetched privkey.pem file.";
         type = lib.types.uniq lib.types.path;
       };
     };
@@ -51,19 +51,19 @@
 
         ${pkgs.coreutils}/bin/mkdir \
           --parents \
-          ${builtins.dirOf config.modules.darkhttpd.acme.output.certificate} \
-          ${builtins.dirOf config.modules.darkhttpd.acme.output.key}
+          ${builtins.dirOf config.modules.darkhttpd.acme.output.fullChain} \
+          ${builtins.dirOf config.modules.darkhttpd.acme.output.privateKey}
 
         ${pkgs.coreutils}/bin/ln \
           --force \
           --symbolic \
-          ${config.modules.darkhttpd.acme.output.certificate} \
+          ${config.modules.darkhttpd.acme.output.fullChain} \
           /etc/letsencrypt/live/${config.modules.darkhttpd.acme.domain}/fullchain.pem
 
         ${pkgs.coreutils}/bin/ln \
           --force \
           --symbolic \
-          ${config.modules.darkhttpd.acme.output.key} \
+          ${config.modules.darkhttpd.acme.output.privateKey} \
           /etc/letsencrypt/live/${config.modules.darkhttpd.acme.domain}/privkey.pem
       '';
     };

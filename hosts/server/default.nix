@@ -14,7 +14,7 @@ rec {
       inherit (networking) domain;
       records = import ./dns.nix networking.domain;
     };
-    darkhttpd = {
+    darkhttpd = rec {
       enable = true;
       root = "/var/www";
       acme = {
@@ -22,15 +22,15 @@ rec {
         email = "admin@${networking.domain}";
         inherit (networking) domain;
         output = {
-          certificate = "/var/lib/acme/cert.pem";
-          key = "/var/lib/acme/key.pem";
+          fullChain = "/var/lib/acme/fullchain.pem";
+          privateKey = "/var/lib/acme/privkey.pem";
         };
       };
       tls = {
         enable = true;
         pemFile = [
-          "/var/lib/acme/cert.pem"
-          "/var/lib/acme/key.pem"
+          acme.output.fullChain
+          acme.output.privateKey
         ];
       };
     };
