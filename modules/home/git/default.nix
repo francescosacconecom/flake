@@ -36,6 +36,7 @@
 
       extraConfig = {
         init.defaultBranch = "master";
+        pull.rebase = false;
       };
     };
   };
