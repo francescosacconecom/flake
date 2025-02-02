@@ -33,41 +33,39 @@
   };
 
   config = lib.mkIf config.modules.darkhttpd.acme.enable {
-    systemd.services = {
-      certbot = {
-        enable = true;
-        wantedBy = [ "multi-user.target" ];
-        after = [ "darkhttpd.service" ];
-        script = ''
-          ${pkgs.certbot}/bin/certbot \
-            certonly \
-            --non-interactive \
-            --agree-tos \
-            --email ${config.modules.darkhttpd.acme.email} \
-            --key-type rsa \
-            --rsa-key-size 4096 \
-            --webroot \
-            --webroot-path ${config.modules.darkhttpd.root} \
-            --domain ${config.modules.darkhttpd.acme.domain}
+    systemd.services.certbot = {
+      enable = true;
+      wantedBy = [ "multi-user.target" ];
+      after = [ "darkhttpd.service" ];
+      script = ''
+        ${pkgs.certbot}/bin/certbot \
+          certonly \
+          --non-interactive \
+          --agree-tos \
+          --email ${config.modules.darkhttpd.acme.email} \
+          --key-type rsa \
+          --rsa-key-size 4096 \
+          --webroot \
+          --webroot-path ${config.modules.darkhttpd.root} \
+          --domain ${config.modules.darkhttpd.acme.domain}
 
-          ${pkgs.coreutils}/bin/mkdir \
-            --parents \
-            ${builtins.dirOf config.modules.darkhttpd.acme.output.certificate} \
-            ${builtins.dirOf config.modules.darkhttpd.acme.output.key}
+        ${pkgs.coreutils}/bin/mkdir \
+          --parents \
+          ${builtins.dirOf config.modules.darkhttpd.acme.output.certificate} \
+          ${builtins.dirOf config.modules.darkhttpd.acme.output.key}
 
-          ${pkgs.coreutils}/bin/ln \
-            --force \
-            --symbolic \
-            ${config.modules.darkhttpd.acme.output.certificate} \
-            /etc/letsencrypt/live/${config.modules.darkhttpd.acme.domain}/fullchain.pem
+        ${pkgs.coreutils}/bin/ln \
+          --force \
+          --symbolic \
+          ${config.modules.darkhttpd.acme.output.certificate} \
+          /etc/letsencrypt/live/${config.modules.darkhttpd.acme.domain}/fullchain.pem
 
-          ${pkgs.coreutils}/bin/ln \
-            --force \
-            --symbolic \
-            ${config.modules.darkhttpd.acme.output.key} \
-            /etc/letsencrypt/live/${config.modules.darkhttpd.acme.domain}/privkey.pem
-        '';
-      };
+        ${pkgs.coreutils}/bin/ln \
+          --force \
+          --symbolic \
+          ${config.modules.darkhttpd.acme.output.key} \
+          /etc/letsencrypt/live/${config.modules.darkhttpd.acme.domain}/privkey.pem
+      '';
     };
   };
 }
