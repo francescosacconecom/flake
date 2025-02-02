@@ -39,12 +39,12 @@
       after = [ "darkhttpd.service" ];
       script = ''
         ${pkgs.hitch}/bin/hitch \
-          --backend localhost:80 \
-          --frontend [*]:443 \
+          --backend [localhost]:80 \
+          --frontend [localhost]:443 \
           --backend-connect-timeout 30 \
           --ssl-handshake-timeout 30 \
-          --user $(${pkgs.coreutils}/bin/id -u hitch) \
-          --group $(${pkgs.coreutils}/bin/id -g hitch) \
+          --user hitch \
+          --group hitch \
           ${builtins.concatStringsSep " " config.modules.darkhttpd.tls.pemFiles}
       '';
     };
