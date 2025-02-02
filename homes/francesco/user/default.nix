@@ -12,7 +12,6 @@
       "audio"
       "networkmanager"
       "realtime"
-      "syncthing"
       "wheel"
     ];
     createHome = true;
