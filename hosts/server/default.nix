@@ -3,15 +3,15 @@
   pkgs,
   ...
 }:
-{
+rec {
   imports = [
     ./disk-config.nix
   ];
 
-  modules = rec {
+  modules = {
     bind = {
       enable = true;
-      domain = "francescosaccone.com";
+      inherit (networking) domain;
       records =
         let
           ttl = 3600;
@@ -22,14 +22,14 @@
             inherit ttl;
             class = "IN";
             type = "SOA";
-            data = "ns1.${bind.domain}. admin.${bind.domain}. 2021090101 900 900 2592000 900";
+            data = "ns1.${networking.domain}. admin.${networking.domain}. 2021090101 900 900 2592000 900";
           }
           {
             name = "@";
             inherit ttl;
             class = "IN";
             type = "NS";
-            data = "ns1.${bind.domain}.";
+            data = "ns1.${networking.domain}.";
           }
           {
             name = "ns1";
@@ -54,20 +54,6 @@
           }
           {
             name = "@";
-            inherit ttl;
-            class = "IN";
-            type = "AAAA";
-            data = "2001:1600:13:101::16e3";
-          }
-          {
-            name = "mx";
-            inherit ttl;
-            class = "IN";
-            type = "A";
-            data = "193.108.52.52";
-          }
-          {
-            name = "mx";
             inherit ttl;
             class = "IN";
             type = "AAAA";
@@ -78,7 +64,7 @@
             inherit ttl;
             class = "IN";
             type = "MX";
-            data = "10 ${mailserver.hostDomain}.";
+            data = "10 ${modules.mailserver.hostDomain}.";
           }
           {
             name = "@";
@@ -96,10 +82,10 @@
       };
     };
     mailserver = {
-      enable = false;
-      addressDomain = bind.domain;
-      hostDomain = "mx.${bind.domain}";
-      acmeEmail = "admin@${bind.domain}";
+      enable = true;
+      addressDomain = networking.domain;
+      hostDomain = networking.domain;
+      acmeEmail = "admin@${networking.domain}";
       accounts = {
         "francesco" = {
           hashedPassword = "$y$j9T$fM7MqDwT1ViKNurSFijqN0$XoRyKBUzsMt4oigUcWkDQf7cU6JYz5A61wZlQrlannD";
@@ -140,6 +126,8 @@
         };
     };
   };
+
+  networking.domain = "francescosaccone.com";
 
   boot.loader.grub = {
     efiSupport = true;
