@@ -58,4 +58,4 @@ in
     type = "TXT";
     data = "\"v=spf1 mx -all\"";
   }
-];
+]
