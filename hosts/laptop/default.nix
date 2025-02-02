@@ -33,33 +33,6 @@
       port = 8888;
       secretKey = builtins.getEnv "SEARX_SECRET_KEY";
     };
-    syncthing = {
-      enable = true;
-      root = "/var/lib/syncthing";
-      announce = {
-        enable = true;
-      };
-      folders =
-        let
-          devices = [
-            "AXH5A4N-C5MEHNR-AKFFXUO-CRNLEFI-XAGJ23U-25MIBSG-2WHJMZO-K35GHQF"
-          ];
-        in
-        {
-          music = {
-            inherit devices;
-          };
-          notes = {
-            inherit devices;
-          };
-          pictures = {
-            inherit devices;
-          };
-          vault = {
-            inherit devices;
-          };
-        };
-    };
     sudo = {
       enable = true;
     };

@@ -10,7 +10,6 @@
     ./pipewire
     ./searx
     ./sudo
-    ./syncthing
     ./tlp
     ./wayland
   ];
