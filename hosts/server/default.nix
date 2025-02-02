@@ -21,7 +21,7 @@ rec {
       };
     };
     mailserver = {
-      enable = true;
+      enable = false;
       addressDomain = networking.domain;
       hostDomain = networking.domain;
       acmeEmail = "admin@${networking.domain}";
