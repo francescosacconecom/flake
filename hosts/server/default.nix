@@ -20,18 +20,6 @@ rec {
         enable = true;
       };
     };
-    mailserver = {
-      enable = false;
-      addressDomain = networking.domain;
-      hostDomain = networking.domain;
-      acmeEmail = "admin@${networking.domain}";
-      accounts = {
-        "francesco" = {
-          hashedPassword = "$y$j9T$fM7MqDwT1ViKNurSFijqN0$XoRyKBUzsMt4oigUcWkDQf7cU6JYz5A61wZlQrlannD";
-          aliasNames = [ "admin" ];
-        };
-      };
-    };
     openssh.listen = {
       enable = true;
       port = 22;
