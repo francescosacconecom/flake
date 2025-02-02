@@ -12,68 +12,7 @@ rec {
     bind = {
       enable = true;
       inherit (networking) domain;
-      records =
-        let
-          ttl = 3600;
-        in
-        [
-          {
-            name = "@";
-            inherit ttl;
-            class = "IN";
-            type = "SOA";
-            data = "ns1.${networking.domain}. admin.${networking.domain}. 2021090101 900 900 2592000 900";
-          }
-          {
-            name = "@";
-            inherit ttl;
-            class = "IN";
-            type = "NS";
-            data = "ns1.${networking.domain}.";
-          }
-          {
-            name = "ns1";
-            inherit ttl;
-            class = "IN";
-            type = "A";
-            data = "193.108.52.52";
-          }
-          {
-            name = "ns1";
-            inherit ttl;
-            class = "IN";
-            type = "AAAA";
-            data = "2001:1600:13:101::16e3";
-          }
-          {
-            name = "@";
-            inherit ttl;
-            class = "IN";
-            type = "A";
-            data = "193.108.52.52";
-          }
-          {
-            name = "@";
-            inherit ttl;
-            class = "IN";
-            type = "AAAA";
-            data = "2001:1600:13:101::16e3";
-          }
-          {
-            name = "@";
-            inherit ttl;
-            class = "IN";
-            type = "MX";
-            data = "10 ${modules.mailserver.hostDomain}.";
-          }
-          {
-            name = "@";
-            inherit ttl;
-            class = "IN";
-            type = "TXT";
-            data = "\"v=spf1 mx -all\"";
-          }
-        ];
+      records = import ./dns.nix networking.domain;
     };
     git = {
       enable = true;
