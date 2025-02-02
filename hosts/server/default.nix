@@ -26,6 +26,13 @@ rec {
           key = "/var/lib/acme/key.pem";
         };
       };
+      tls = {
+        enable = true;
+        pemFile = [
+          "/var/lib/acme/cert.pem"
+          "/var/lib/acme/key.pem"
+        ];
+      };
     };
     git = {
       enable = true;

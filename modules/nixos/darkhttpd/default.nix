@@ -8,6 +8,7 @@
 {
   imports = [
     ./acme
+    ./tls
   ];
 
   options.modules.darkhttpd = {
