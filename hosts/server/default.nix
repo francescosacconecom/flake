@@ -17,6 +17,15 @@ rec {
     darkhttpd = {
       enable = true;
       root = "/var/www";
+      acme = {
+        enable = true;
+        email = "admin@${networking.domain}";
+        inherit (networking) domain;
+        output = {
+          certificate = "/var/lib/acme/cert.pem";
+          key = "/var/lib/acme/key.pem";
+        };
+      };
     };
     git = {
       enable = true;

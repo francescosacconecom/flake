@@ -6,6 +6,10 @@
   ...
 }:
 {
+  imports = [
+    ./acme
+  ];
+
   options.modules.darkhttpd = {
     enable = lib.mkOption {
       description = "Whether to enable Darkhttpd.";
