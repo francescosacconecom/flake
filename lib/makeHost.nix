@@ -12,7 +12,6 @@ nixpkgs.lib.nixosSystem {
     (../hardware + "/${host}")
     ../hosts/common
     ../modules/nixos
-    inputs.mailserver.nixosModules.mailserver
     (
       {
         config,
