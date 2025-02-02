@@ -20,7 +20,8 @@ in
   {
     name = "ns1";
     inherit ttl;
-    class = "IN"; type = "A";
+    class = "IN";
+    type = "A";
     data = "193.108.52.52";
   }
   {
