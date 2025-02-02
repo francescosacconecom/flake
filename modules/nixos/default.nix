@@ -3,6 +3,7 @@
   imports = [
     ./bind
     ./chromium
+    ./darkhttpd
     ./git
     ./monerod
     ./networkmanager

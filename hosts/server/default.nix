@@ -14,6 +14,10 @@ rec {
       inherit (networking) domain;
       records = import ./dns.nix networking.domain;
     };
+    darkhttpd = {
+      enable = true;
+      root = "/var/www";
+    };
     git = {
       enable = true;
       daemon = {
