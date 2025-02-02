@@ -45,7 +45,7 @@
           --ssl-handshake-timeout 30 \
           --user $(${pkgs.coreutils}/bin/id -u hitch) \
           --group $(${pkgs.coreutils}/bin/id -g hitch) \
-          ${builtins.concatStringsSep " " config.modules.darkhttpd.tls.pemfiles}
+          ${builtins.concatStringsSep " " config.modules.darkhttpd.tls.pemFiles}
       '';
     };
 

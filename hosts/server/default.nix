@@ -28,7 +28,7 @@ rec {
       };
       tls = {
         enable = true;
-        pemFile = [
+        pemFiles = [
           acme.output.fullChain
           acme.output.privateKey
         ];
