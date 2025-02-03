@@ -50,13 +50,34 @@ in
     inherit ttl;
     class = "IN";
     type = "MX";
-    data = "10 ${domain}.";
+    data = "10 glacier.mxrouting.net.";
+  }
+  {
+    name = "@";
+    inherit ttl;
+    class = "IN";
+    type = "MX";
+    data = "20 glacier-relay.mxrouting.net.";
   }
   {
     name = "@";
     inherit ttl;
     class = "IN";
     type = "TXT";
-    data = "\"v=spf1 mx -all\"";
+    data = "\"v=spf1 include:mxroute.com -all\"";
+  }
+  {
+    name = "x._domainkey";
+    inherit ttl;
+    class = "IN";
+    type = "TXT";
+    data = "\"v=DKIM1;k=rsa;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArLEUDzMAOlQaKm7Ov5hJ4vgETJN7vMbwb2qr4mUI5nU6zpfH/609NV63mZfxTlqOKAan0zee9Yizrc1UgnGE8Y8Hh34vwPo2D2rMA0xuhyDiOVoLvw7AQIp38WeT7Gj7idm3lPy0iDgYIxIZaoQQ9u4GW3XnZmhbHUGURilSDp0kDW6m1i+fPxD0XEyrYLzwYr85KKeWKZJEn6qRk5ogd9n7p7xJa24gvNpMSZTZHvSG9C0EMnorLqlHw5i3HMA99IO6RjZK3Ntoo5YktTbuq9NP+ecpDt3xHC7HOWAGetL8tPC7HZbOF+SCcFXp4LGZpruAEBnzbAbimz0B1va5LQIDAQAB\"";
+  }
+  {
+    name = "_dmarc";
+    inherit ttl;
+    class = "IN";
+    type = "TXT";
+    data = "\"v=DMARC1;p=reject;pct=100;rua=mailto:admin@${domain};\"";
   }
 ]
