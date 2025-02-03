@@ -33,42 +33,68 @@
   };
 
   config = lib.mkIf (config.modules.darkhttpd.acme.enable && config.modules.darkhttpd.enable) {
-    systemd.services.certbot = {
-      enable = true;
-      wantedBy = [ "multi-user.target" ];
-      after = [ "darkhttpd.service" ];
-      serviceConfig = {
-        Type = "oneshot";
+    systemd = {
+      services = {
+        certbot = {
+          enable = true;
+          wantedBy = [ "multi-user.target" ];
+          after = [ "darkhttpd.service" ];
+          serviceConfig = {
+            Type = "oneshot";
+          };
+          script = let
+            inherit (config.modules.darkhttpd) acme;
+          in pkgs.writeShellScriptBin "certbot-fetch" ''
+            if [ ! -f /etc/letsencrypt/live/${acme.domain}/fullchain.pem ]; then
+              ${pkgs.certbot}/bin/certbot \
+                certonly \
+                --non-interactive \
+                --agree-tos \
+                --email ${acme.email} \
+                --key-type rsa \
+                --rsa-key-size 4096 \
+                --webroot \
+                --webroot-path ${config.modules.darkhttpd.root} \
+                --keep-until-expiring \
+                --domain ${acme.domain}
+
+              ${pkgs.coreutils}/bin/mkdir \
+                --parents \
+                ${builtins.dirOf acme.output.fullChain} \
+                ${builtins.dirOf acme.output.privateKey}
+
+              ${pkgs.coreutils}/bin/ln \
+                --force \
+                --symbolic \
+                ${acme.output.fullChain} \
+                /etc/letsencrypt/live/${acme.domain}/fullchain.pem
+
+              ${pkgs.coreutils}/bin/ln \
+                --force \
+                --symbolic \
+                ${acme.output.privateKey} \
+                /etc/letsencrypt/live/${acme.domain}/privkey.pem
+            fi
+          '';
+        };
+        certbot-renewal = {
+          enable = true;
+          wantedBy = [ "multi-user.target" ];
+          script = ''
+            ${pkgs.certbot}/bin/certbot renew --non-interactive --quiet
+          '';
+        };
       };
-      script = ''
-        ${pkgs.certbot}/bin/certbot \
-          certonly \
-          --non-interactive \
-          --agree-tos \
-          --email ${config.modules.darkhttpd.acme.email} \
-          --key-type rsa \
-          --rsa-key-size 4096 \
-          --webroot \
-          --webroot-path ${config.modules.darkhttpd.root} \
-          --domain ${config.modules.darkhttpd.acme.domain}
-
-        ${pkgs.coreutils}/bin/mkdir \
-          --parents \
-          ${builtins.dirOf config.modules.darkhttpd.acme.output.fullChain} \
-          ${builtins.dirOf config.modules.darkhttpd.acme.output.privateKey}
-
-        ${pkgs.coreutils}/bin/ln \
-          --force \
-          --symbolic \
-          ${config.modules.darkhttpd.acme.output.fullChain} \
-          /etc/letsencrypt/live/${config.modules.darkhttpd.acme.domain}/fullchain.pem
-
-        ${pkgs.coreutils}/bin/ln \
-          --force \
-          --symbolic \
-          ${config.modules.darkhttpd.acme.output.privateKey} \
-          /etc/letsencrypt/live/${config.modules.darkhttpd.acme.domain}/privkey.pem
-      '';
+      timers = {
+        certbot-renewal = {
+          enable = true;
+          wantedBy = [ "timers.target" ];
+          timerConfig = {
+            OnCalendar = "daily";
+            Persistent = true;
+          };
+        };
+      };
     };
   };
 }
