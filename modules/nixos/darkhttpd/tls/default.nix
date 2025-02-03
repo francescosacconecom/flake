@@ -18,7 +18,7 @@
     };
   };
 
-  config = lib.mkIf config.modules.darkhttpd.tls.enable {
+  config = lib.mkIf (config.modules.darkhttpd.tls.enable && config.modules.darkhttpd.enable) {
     users = {
       users = {
         hitch = {
@@ -36,7 +36,12 @@
     systemd.services.hitch = {
       enable = true;
       wantedBy = [ "multi-user.target" ];
-      after = [ "darkhttpd.service" ];
+      after = [
+        "darkhttpd.service"
+      ] ++ (if config.modules.darkhttpd.acme.enable then [ "certbot.service" ] else [ ]);
+      serviceConfig = {
+        Type = "oneshot";
+      };
       script = ''
         ${pkgs.hitch}/bin/hitch \
           --backend [localhost]:80 \

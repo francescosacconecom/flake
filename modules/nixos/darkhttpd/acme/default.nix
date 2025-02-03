@@ -32,11 +32,14 @@
     };
   };
 
-  config = lib.mkIf config.modules.darkhttpd.acme.enable {
+  config = lib.mkIf (config.modules.darkhttpd.acme.enable && config.modules.darkhttpd.enable) {
     systemd.services.certbot = {
       enable = true;
       wantedBy = [ "multi-user.target" ];
       after = [ "darkhttpd.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+      };
       script = ''
         ${pkgs.certbot}/bin/certbot \
           certonly \
