@@ -15,15 +15,15 @@
           sent = "Sent";
           trash = "Trash";
         };
-        imapHost = "francescosaccone.com";
+        imapHost = "glacier.mxrouting.net";
         imapTlsPort = 993;
         passwordCommand = ''
           ${pkgs.coreutils}/bin/cat ${./email.asc} | ${pkgs.gnupg}/bin/gpg --decrypt --recipient ${gpg.primaryKey.fingerprint}
         '';
         realName = "Francesco Saccone";
-        smtpHost = "francescosaccone.com";
+        smtpHost = "glacier.mxrouting.net";
         smtpTlsPort = 465;
-        username = "francesco";
+        username = "francesco%40francescosaccone.com";
       };
     };
     git = {
