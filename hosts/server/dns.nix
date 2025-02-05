@@ -8,13 +8,14 @@ in
     inherit ttl;
     class = "IN";
     type = "SOA";
-    data = ''ns1.${domain}. admin.${domain}. (
-      2021090101
-      900
-      900
-      2592000
-      900
-    )'';
+    data = ''
+      ns1.${domain}. admin.${domain}. (
+            2021090101
+            900
+            900
+            2592000
+            900
+          )'';
   }
   {
     name = "@";
@@ -27,7 +28,8 @@ in
     name = "ns1";
     inherit ttl;
     class = "IN";
-    type = "A"; data = "193.108.52.52";
+    type = "A";
+    data = "193.108.52.52";
   }
   {
     name = "ns1";
@@ -76,27 +78,29 @@ in
     inherit ttl;
     class = "IN";
     type = "TXT";
-    data = ''(
-      "v=DKIM1;"
-      "k=rsa;"
-      "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArLEUDzMAOlQaKm7Ov5hJ4vgET"
-      "JN7vMbwb2qr4mUI5nU6zpfH/609NV63mZfxTlqOKAan0zee9Yizrc1UgnGE8Y8Hh34vwPo2"
-      "D2rMA0xuhyDiOVoLvw7AQIp38WeT7Gj7idm3lPy0iDgYIxIZaoQQ9u4GW3XnZmhbHUGURil"
-      "SDp0kDW6m1i+fPxD0XEyrYLzwYr85KKeWKZJEn6qRk5ogd9n7p7xJa24gvNpMSZTZHvSG9C"
-      "0EMnorLqlHw5i3HMA99IO6RjZK3Ntoo5YktTbuq9NP+ecpDt3xHC7HOWAGetL8tPC7HZbOF"
-      "+SCcFXp4LGZpruAEBnzbAbimz0B1va5LQIDAQAB;"
-    )'';
+    data = ''
+      (
+            "v=DKIM1;"
+            "k=rsa;"
+            "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArLEUDzMAOlQaKm7Ov5hJ4vgET"
+            "JN7vMbwb2qr4mUI5nU6zpfH/609NV63mZfxTlqOKAan0zee9Yizrc1UgnGE8Y8Hh34vwPo2"
+            "D2rMA0xuhyDiOVoLvw7AQIp38WeT7Gj7idm3lPy0iDgYIxIZaoQQ9u4GW3XnZmhbHUGURil"
+            "SDp0kDW6m1i+fPxD0XEyrYLzwYr85KKeWKZJEn6qRk5ogd9n7p7xJa24gvNpMSZTZHvSG9C"
+            "0EMnorLqlHw5i3HMA99IO6RjZK3Ntoo5YktTbuq9NP+ecpDt3xHC7HOWAGetL8tPC7HZbOF"
+            "+SCcFXp4LGZpruAEBnzbAbimz0B1va5LQIDAQAB;"
+          )'';
   }
   {
     name = "_dmarc";
     inherit ttl;
     class = "IN";
     type = "TXT";
-    data = ''(
-      "v=DMARC1;"
-      "p=reject;"
-      "pct=100;"
-      "rua=mailto:admin@${domain};";
-    )'';
+    data = ''
+      (
+            "v=DMARC1;"
+            "p=reject;"
+            "pct=100;"
+            "rua=mailto:admin@${domain};";
+          )'';
   }
 ]
