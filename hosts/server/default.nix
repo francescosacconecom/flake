@@ -20,12 +20,12 @@ rec {
       repositories = {
         flake = {
           description = "Francesco Saccone's Nix flake.";
-          owner = "Francesco Saccone <francesco@${networking.domain}>";
+          owner = "Francesco Saccone";
           baseUrl = networking.domain;
         };
         website = {
           description = "Francesco Saccone's website content.";
-          owner = "Francesco Saccone <francesco@${networking.domain}>";
+          owner = "Francesco Saccone";
           baseUrl = networking.domain;
         };
       };
