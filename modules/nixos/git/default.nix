@@ -126,7 +126,7 @@
           enable = true;
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
-            Type = "oneshot";
+            RemainAfterExit = true;
           };
           script = ''
             ${
@@ -253,9 +253,17 @@
               ${stagit.output}
           '';
         };
+        stagit-watcher = {
+          enable = true;
+          wantedBy = [ "multi-user.target" ];
+          serviceConfig = {
+            Type = "oneshot";
+          };
+          script = "${pkgs.systemdMinimal}/bin/systemctl restart stagit.service";
+        };
       };
       paths = {
-        stagit = {
+        stagit-watcher = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
           pathConfig = {
