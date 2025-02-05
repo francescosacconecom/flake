@@ -86,185 +86,159 @@
       };
     };
 
-    systemd =  let
-      inherit (config.modules.git) stagit;
-    in {
-      services = {
-        git-repositories = {
-          enable = true;
-          wantedBy = [ "multi-user.target" ];
-          script =
-            config.modules.git.repositories
-            |> builtins.mapAttrs (
-              name:
-              {
-                description,
-                owner,
-                baseUrl,
-              }:
-              ''
-                ${pkgs.git}/bin/git \
-                  init \
-                  --quiet \
-                  --bare \
-                  --initial-branch master \
-                  /srv/git/${name}
+    systemd =
+      let
+        inherit (config.modules.git) stagit;
+      in
+      {
+        services = {
+          git-repositories = {
+            enable = true;
+            wantedBy = [ "multi-user.target" ];
+            script =
+              config.modules.git.repositories
+              |> builtins.mapAttrs (
+                name:
+                {
+                  description,
+                  owner,
+                  baseUrl,
+                }:
+                ''
+                  ${pkgs.git}/bin/git \
+                    init \
+                    --quiet \
+                    --bare \
+                    --initial-branch master \
+                    /srv/git/${name}
 
-                ${pkgs.coreutils}/bin/echo "${description}" > /srv/git/${name}/description
+                  ${pkgs.coreutils}/bin/echo "${description}" > /srv/git/${name}/description
 
-                ${pkgs.coreutils}/bin/echo "${owner}" > /srv/git/${name}/owner
+                  ${pkgs.coreutils}/bin/echo "${owner}" > /srv/git/${name}/owner
 
-                ${pkgs.coreutils}/bin/echo "git://${baseUrl}/${name}" > /srv/git/${name}/url
+                  ${pkgs.coreutils}/bin/echo "git://${baseUrl}/${name}" > /srv/git/${name}/url
 
-                ${pkgs.coreutils}/bin/chown --recursive git:git /srv/git/${name}
-              ''
-            )
-            |> builtins.attrValues
-            |> builtins.concatStringsSep "\n";
-        };
-        stagit = lib.mkIf stagit.enable {
-          enable = true;
-          wantedBy = [ "multi-user.target" ];
-          serviceConfig = {
-            Type = "oneshot";
+                  ${pkgs.coreutils}/bin/chown --recursive git:git /srv/git/${name}
+                ''
+              )
+              |> builtins.attrValues
+              |> builtins.concatStringsSep "\n";
           };
-          script = ''
-            ${
-              (
-                config.modules.git.repositories
-                |> builtins.attrNames
-                |> builtins.map (name: ''
-                  ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}/${name}
-                  cd ${stagit.output}/${name}
+          stagit = lib.mkIf stagit.enable {
+            enable = true;
+            wantedBy = [ "multi-user.target" ];
+            serviceConfig = {
+              Type = "oneshot";
+            };
+            script = ''
+              ${
+                (
+                  config.modules.git.repositories
+                  |> builtins.attrNames
+                  |> builtins.map (name: ''
+                    ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}/${name}
+                    cd ${stagit.output}/${name}
 
-                  ${pkgs.stagit}/bin/stagit /srv/git/${name}
+                    ${pkgs.stagit}/bin/stagit /srv/git/${name}
+                  '')
+                )
+                |> builtins.concatStringsSep "\n"
+              }
 
-                  ${
-                    (
-                      if stagit.assets.faviconPng != null then
-                        ''
-                          ${pkgs.coreutils}/bin/ln \
-                            --force \
-                            --symbolic \
-                            ${stagit.assets.faviconPng} \
-                            ${stagit.output}/${name}/favicon.png
-                        ''
-                      else
-                        ""
-                    )
-                  }
-
-                  ${
-                    (
-                      if stagit.assets.logoPng != null then
-                        ''
-                          ${pkgs.coreutils}/bin/ln \
-                            --force \
-                            --symbolic \
-                            ${stagit.assets.logoPng} \
-                            ${stagit.output}/${name}/logo.png
-                        ''
-                      else
-                        ""
-                    )
-                  }
-
-                  ${
-                    (
-                      if stagit.assets.styleCss != null then
-                        ''
-                          ${pkgs.coreutils}/bin/ln \
-                            --force \
-                            --symbolic \
-                            ${stagit.assets.styleCss} \
-                            ${stagit.output}/${name}/style.css
-                        ''
-                      else
-                        ""
-                    )
-                  }
-                '')
-              )
-              |> builtins.concatStringsSep "\n"
-            }
-
-            ${pkgs.stagit}/bin/stagit-index ${
-              (
-                config.modules.git.repositories
-                |> builtins.attrNames
-                |> builtins.map (name: "/srv/git/${name}")
-                |> builtins.concatStringsSep " "
-              )
-            } > ${stagit.output}/index.html
-
-            ${
-              (
-                if stagit.assets.faviconPng != null then
-                  ''
-                    ${pkgs.coreutils}/bin/ln \
-                      --force \
-                      --symbolic \
-                      ${stagit.assets.faviconPng} \
-                      ${stagit.output}/favicon.png
-                  ''
-                else
-                  ""
-              )
-            }
-
-            ${
-              (
-                if stagit.assets.logoPng != null then
-                  ''
-                    ${pkgs.coreutils}/bin/ln \
-                      --force \
-                      --symbolic \
-                      ${stagit.assets.logoPng} \
-                      ${stagit.output}/logo.png
-                  ''
-                else
-                  ""
-              )
-            }
-
-            ${
-              (
-                if stagit.assets.styleCss != null then
-                  ''
-                    ${pkgs.coreutils}/bin/ln \
-                      --force \
-                      --symbolic \
-                      ${stagit.assets.styleCss} \
-                      ${stagit.output}/style.css
-                  ''
-                else
-                  ""
-              )
-            }
-
-            ${pkgs.coreutils}/bin/chown \
-              --recursive \
-              git:www \
-              ${stagit.output}
-
-            ${pkgs.coreutils}/bin/chmod \
-              --recursive \
-              g+r \
-              ${stagit.output}
-          '';
+              ${pkgs.stagit}/bin/stagit-index ${
+                (
+                  config.modules.git.repositories
+                  |> builtins.attrNames
+                  |> builtins.map (name: "/srv/git/${name}")
+                  |> builtins.concatStringsSep " "
+                )
+              } > ${stagit.output}/index.html
+            '';
+          };
         };
-      };
-      timers = {
-        stagit = lib.mkIf stagit.enable {
-          enable = true;
-          wantedBy = [ "multi-user.target" ];
-          timerConfig = {
-            OnCalendar = "hourly";
-            Persistent = true;
+        timers = {
+          stagit = lib.mkIf stagit.enable {
+            enable = true;
+            wantedBy = [ "multi-user.target" ];
+            timerConfig = {
+              OnCalendar = "hourly";
+              Persistent = true;
+            };
           };
         };
       };
-    };
+
+    systemd.activationScripts =
+      let
+        inherit (config.modules.git) stagit;
+      in
+      lib.mkIf stagit.enable {
+        stagitWwwPermissions = ''
+          ${pkgs.coreutils}/bin/chown \
+            --recursive \
+            git:www \
+            ${stagit.output}
+
+          ${pkgs.coreutils}/bin/chmod \
+            --recursive \
+            g+r \
+            ${stagit.output}
+        '';
+        stagitIndexFaviconPng = lib.mkIf (stagit.assets.faviconPng != null) ''
+          ${pkgs.coreutils}/bin/ln \
+            --force \
+            --symbolic \
+            ${stagit.assets.faviconPng} \
+            ${stagit.output}/favicon.png
+        '';
+        stagitRepositoriesFaviconPng =
+          lib.mkIf (stagit.assets.faviconPng != null) config.modules.git.repositories
+          |> builtins.attrNames
+          |> builtins.map (name: ''
+            ${pkgs.coreutils}/bin/ln \
+              --force \
+              --symbolic \
+              ${stagit.assets.faviconPng} \
+              ${stagit.output}/${name}/favicon.png
+          '')
+          |> builtins.concatStringsSep "\n";
+        stagitIndexLogoPng = lib.mkIf (stagit.assets.logoPng != null) ''
+          ${pkgs.coreutils}/bin/ln \
+            --force \
+            --symbolic \
+            ${stagit.assets.faviconPng} \
+            ${stagit.output}/logo.png
+        '';
+        stagitRepositoriesLogoPng =
+          lib.mkIf (stagit.assets.logoPng != null) config.modules.git.repositories
+          |> builtins.attrNames
+          |> builtins.map (name: ''
+            ${pkgs.coreutils}/bin/ln \
+              --force \
+              --symbolic \
+              ${stagit.assets.logoPng} \
+              ${stagit.output}/${name}/logo.png
+          '')
+          |> builtins.concatStringsSep "\n";
+        stagitIndexStyleCss = lib.mkIf (stagit.assets.styleCss != null) ''
+          ${pkgs.coreutils}/bin/ln \
+            --force \
+            --symbolic \
+            ${stagit.assets.styleCss} \
+            ${stagit.output}/style.css
+        '';
+        stagitRepositoriesStyleCss =
+          lib.mkIf (stagit.assets.styleCss != null) config.modules.git.repositories
+          |> builtins.attrNames
+          |> builtins.map (name: ''
+            ${pkgs.coreutils}/bin/ln \
+              --force \
+              --symbolic \
+              ${stagit.assets.styleCss} \
+              ${stagit.output}/${name}/style.css
+          '')
+          |> builtins.concatStringsSep "\n";
+      };
 
     programs.git = {
       enable = true;
