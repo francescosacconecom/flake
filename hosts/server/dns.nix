@@ -53,6 +53,13 @@ in
     data = "2001:1600:13:101::16e3";
   }
   {
+    name = "www";
+    inherit ttl;
+    class = "IN";
+    type = "CNAME";
+    data = domain;
+  }
+  {
     name = "@";
     inherit ttl;
     class = "IN";
