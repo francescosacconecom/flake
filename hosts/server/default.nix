@@ -40,6 +40,10 @@ rec {
           description = "Francesco Saccone's Nix flake.";
           owner = "Francesco Saccone <francesco@${networking.domain}>";
         };
+        website = {
+          description = "Francesco Saccone's website content.";
+          owner = "Francesco Saccone <francesco@${networking.domain}>";
+        };
       };
       daemon = {
         enable = true;
