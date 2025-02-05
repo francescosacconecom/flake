@@ -39,8 +39,8 @@
       };
     };
 
-    system.activationScripts.www_group_permissions = ''
-      chmod --recursive g+rwx ${config.modules.quark.root}
+    system.activationScripts.wwwGroupPermissions = ''
+      ${pkgs.coreutils}/bin/chmod --recursive g+rwx ${config.modules.quark.root}
     '';
 
     systemd = {
