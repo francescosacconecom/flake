@@ -22,9 +22,9 @@
       type = lib.types.uniq lib.types.path;
     };
     servedFiles = lib.mkOption {
-      description = "The list of files or directories to be copied in the root directory.";
-      default = [ ];
-      type = lib.types.listOf lib.types.path;
+      description = "For each file relative to the root, the file containing its content.";
+      default = { };
+      type = lib.types.attrsOf lib.types.path;
     };
   };
 
@@ -56,13 +56,21 @@
         (
           (
             config.modules.darkhttpd.servedFiles
-            |> builtins.map (file: ''
-              ${pkgs.coreutils}/bin/ln \
-                --force \
-                --symbolic \
-                ${config.modules.darkhttpd.root}/${builtins.baseNameOf file} \
-                ${file}
-            '')
+            |> builtins.mapAttrs (
+              relativePath: file: ''
+                ${pkgs.coreutils}/bin/ln \
+                  --force \
+                  --symbolic \
+                  ${file} \
+                  ${config.modules.darkhttpd.root}/${relativePath}
+
+                ${pkgs.coreutils}/bin/chown \
+                  --recursive \
+                  darkhttpd:www \
+                  ${config.modules.darkhttpd.root}/${relativePath}
+              ''
+            )
+            |> builtins.attrValues
           )
           ++ [
             ''
@@ -76,9 +84,8 @@
                 --gid www \
                 --no-server-id \
                 --timeout 30 \
-                --ipv6
+                --ipv6 ${(if config.modules.darkhttpd.tls.enable then " --forward-https" else "")}
             ''
-            ++ (if config.modules.darkhttpd.tls.enable then " --forward-https" else "")
           ]
         )
         |> builtins.concatStringsSep "\n";
