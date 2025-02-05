@@ -112,10 +112,10 @@
                     --initial-branch master \
                     /srv/git/${name}
 
+                  ${pkgs.coreutils}/bin/touch /srv/git/${name}/git-daemon-export-ok
+
                   ${pkgs.coreutils}/bin/echo "${description}" > /srv/git/${name}/description
-
                   ${pkgs.coreutils}/bin/echo "${owner}" > /srv/git/${name}/owner
-
                   ${pkgs.coreutils}/bin/echo "git://${baseUrl}/${name}" > /srv/git/${name}/url
 
                   ${pkgs.coreutils}/bin/chown --recursive git:git /srv/git/${name}
@@ -259,7 +259,12 @@
       user = "git";
       group = "git";
       basePath = "/srv/git";
-      repositories = builtins.attrNames config.modules.git.repositories;
+      repositories =
+        config.modules.git.repositories
+        |> builtins.attrNames
+        |> builtins.map (
+          name: "/srv/git/${name}"
+        );
 
       port = 9418;
     };
