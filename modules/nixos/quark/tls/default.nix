@@ -6,7 +6,7 @@
   ...
 }:
 {
-  options.modules.darkhttpd.tls = {
+  options.modules.quark.tls = {
     enable = lib.mkOption {
       description = "Whether to enable the Hitch reverse proxy.";
       default = false;
@@ -18,7 +18,7 @@
     };
   };
 
-  config = lib.mkIf (config.modules.darkhttpd.tls.enable && config.modules.darkhttpd.enable) {
+  config = lib.mkIf (config.modules.quark.tls.enable && config.modules.quark.enable) {
     users = {
       users = {
         hitch = {
@@ -35,8 +35,8 @@
       enable = true;
       wantedBy = [ "multi-user.target" ];
       after = [
-        "darkhttpd.service"
-      ] ++ (if config.modules.darkhttpd.acme.enable then [ "certbot.service" ] else [ ]);
+        "quark.service"
+      ] ++ (if config.modules.quark.acme.enable then [ "certbot.service" ] else [ ]);
       script = ''
         ${pkgs.hitch}/bin/hitch \
           --backend [localhost]:80 \
@@ -46,7 +46,7 @@
           --ocsp-dir /var/lib/hitch \
           --user hitch \
           --group www \
-          ${builtins.concatStringsSep " " config.modules.darkhttpd.tls.pemFiles}
+          ${builtins.concatStringsSep " " config.modules.quark.tls.pemFiles}
       '';
     };
 

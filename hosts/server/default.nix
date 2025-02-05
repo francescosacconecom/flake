@@ -15,21 +15,6 @@ rec {
       inherit (networking) domain;
       records = import ./dns.nix networking.domain;
     };
-    darkhttpd = rec {
-      enable = true;
-      root = "/var/www";
-      acme = {
-        enable = true;
-        email = "admin@${networking.domain}";
-        inherit (networking) domain;
-      };
-      tls = {
-        enable = true;
-        pemFiles = [
-          (config.security.acme.certs.${acme.domain}.directory + "/full.pem")
-        ];
-      };
-    };
     git = {
       enable = true;
       repositories = {
@@ -46,7 +31,7 @@ rec {
       };
       stagit = {
         enable = true;
-        output = modules.darkhttpd.root + "/git";
+        output = modules.quark.root + "/git";
         baseUrl = "https://${networking.domain}/git";
         assets = {
           faviconPng = ./website/logo.png;
@@ -63,6 +48,21 @@ rec {
           ./ssh/francescoSaccone
         ];
         git = root;
+      };
+    };
+    quark = rec {
+      enable = true;
+      root = "/var/www";
+      acme = {
+        enable = true;
+        email = "admin@${networking.domain}";
+        inherit (networking) domain;
+      };
+      tls = {
+        enable = true;
+        pemFiles = [
+          (config.security.acme.certs.${acme.domain}.directory + "/full.pem")
+        ];
       };
     };
   };

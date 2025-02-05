@@ -75,6 +75,7 @@
           hashedPassword = "!";
           isSystemUser = true;
           group = "git";
+          extraGroups = lib.mkIf config.modules.git.stagit.enable [ "www" ];
           createHome = true;
           home = "/srv/git";
           shell = "${pkgs.git}/bin/git-shell";
@@ -263,6 +264,16 @@
                   ""
               )
             }
+
+            ${pkgs.coreutils}/bin/chown \
+              --recursive \
+              git:www \
+              ${stagit.output}
+
+            ${pkgs.coreutils}/bin/chmod \
+              --recursive \
+              g+r \
+              ${stagit.output}
           '';
         };
     };

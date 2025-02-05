@@ -6,7 +6,7 @@
   ...
 }:
 {
-  options.modules.darkhttpd.acme = {
+  options.modules.quark.acme = {
     enable = lib.mkOption {
       description = "Whether to enable the Certbot ACME client.";
       default = false;
@@ -22,19 +22,19 @@
     };
   };
 
-  config = lib.mkIf (config.modules.darkhttpd.acme.enable && config.modules.darkhttpd.enable) {
+  config = lib.mkIf (config.modules.quark.acme.enable && config.modules.quark.enable) {
     security.acme = {
       acceptTerms = true;
       certs =
         let
-          inherit (config.modules.darkhttpd) acme;
+          inherit (config.modules.quark) acme;
         in
         {
           ${acme.domain} = {
             inherit (acme) email domain;
 
             group = "www";
-            webroot = config.modules.darkhttpd.root;
+            webroot = config.modules.quark.root;
           };
         };
     };

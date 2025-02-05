@@ -11,9 +11,9 @@
     ./tls
   ];
 
-  options.modules.darkhttpd = {
+  options.modules.quark = {
     enable = lib.mkOption {
-      description = "Whether to enable Darkhttpd.";
+      description = "Whether to enable Quark.";
       default = false;
       type = lib.types.bool;
     };
@@ -23,15 +23,15 @@
     };
   };
 
-  config = lib.mkIf config.modules.darkhttpd.enable {
+  config = lib.mkIf config.modules.quark.enable {
     users = {
       users = {
-        darkhttpd = {
+        quark = {
           hashedPassword = "!";
           isSystemUser = true;
           group = "www";
           createHome = true;
-          home = config.modules.darkhttpd.root;
+          home = config.modules.quark.root;
         };
       };
       groups = {
@@ -40,25 +40,21 @@
     };
 
     system.activationScripts.www_group_permissions = ''
-      chmod --recursive g+rwx ${config.modules.darkhttpd.root}
+      chmod --recursive g+rwx ${config.modules.quark.root}
     '';
 
-    systemd.services.darkhttpd = {
+    systemd.services.quark = {
       enable = true;
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
       script = ''
-        ${pkgs.darkhttpd}/bin/darkhttpd \
-          ${config.modules.darkhttpd.root} \
-          --port 80 \
-          --chroot \
-          --index index.html \
-          --no-listing \
-          --uid darkhttpd \
-          --gid www \
-          --no-server-id \
-          --timeout 30 \
-          --ipv6 ${(if config.modules.darkhttpd.tls.enable then " --forward-https" else "")}
+        ${pkgs.quark}/bin/quark \
+          -p 80 \
+          -h localhost \
+          -u quark \
+          -g www \
+          -d ${config.modules.quark.root} \
+          -i index.html
       '';
     };
 

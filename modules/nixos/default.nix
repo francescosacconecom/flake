@@ -3,12 +3,12 @@
   imports = [
     ./bind
     ./chromium
-    ./darkhttpd
     ./git
     ./monerod
     ./networkmanager
     ./openssh
     ./pipewire
+    ./quark
     ./searx
     ./sudo
     ./tlp
