@@ -43,19 +43,41 @@
       chmod --recursive g+rwx ${config.modules.quark.root}
     '';
 
-    systemd.services.quark = {
-      enable = true;
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network.target" ];
-      script = ''
-        ${pkgs.quark}/bin/quark \
-          -p 80 \
-          -h localhost \
-          -u quark \
-          -g www \
-          -d ${config.modules.quark.root} \
-          -i index.html
-      '';
+    systemd = {
+      services = {
+        quark = {
+          enable = true;
+          wantedBy = [ "multi-user.target" ];
+          after = [ "network.target" ];
+          script = ''
+            ${pkgs.quark}/bin/quark \
+              -p 80 \
+              -h localhost \
+              -u quark \
+              -g www \
+              -d ${config.modules.quark.root} \
+              -i index.html
+          '';
+        };
+        www-watcher = {
+          enable = true;
+          wantedBy = [ "multi-user.target" ];
+          after = [ "network.target" ];
+          serviceConfig = {
+            Type = "oneshot";
+          };
+          script = "${pkgs.systemdMinimal}/bin/systemctl restart quark.service";
+        };
+      };
+      paths = {
+        www-watcher = {
+          enable = true;
+          wantedBy = [ "multi-user.target" ];
+          pathConfig = {
+            PathModified = config.modules.quark.root;
+          };
+        };
+      };
     };
 
     networking.firewall.allowedTCPPorts = [ 80 ];
