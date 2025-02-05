@@ -11,9 +11,9 @@
     ./tls
   ];
 
-  options.modules.quark = {
+  options.modules.staticWebServer = {
     enable = lib.mkOption {
-      description = "Whether to enable Quark.";
+      description = "Whether to enable Static Web Server.";
       default = false;
       type = lib.types.bool;
     };
@@ -23,15 +23,15 @@
     };
   };
 
-  config = lib.mkIf config.modules.quark.enable {
+  config = lib.mkIf config.modules.staticWebServer.enable {
     users = {
       users = {
-        quark = {
+        static-web-server = {
           hashedPassword = "!";
           isSystemUser = true;
           group = "www";
           createHome = true;
-          home = config.modules.quark.root;
+          home = config.modules.staticWebServer.root;
         };
       };
       groups = {
@@ -40,23 +40,23 @@
     };
 
     system.activationScripts.wwwGroupPermissions = ''
-      ${pkgs.coreutils}/bin/chmod --recursive g+rwx ${config.modules.quark.root}
+      ${pkgs.coreutils}/bin/chmod --recursive g+rwx ${config.modules.staticWebServer.root}
     '';
 
     systemd = {
       services = {
-        quark = {
+        static-web-server = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
           after = [ "network.target" ];
           script = ''
-            ${pkgs.quark}/bin/quark \
-              -p 80 \
-              -h localhost \
-              -u quark \
-              -g www \
-              -d ${config.modules.quark.root} \
-              -i index.html
+            ${pkgs.static-web-server}/bin/static-web-server \
+              --port 80 \
+              --http2 false \
+              --root ${config.modules.staticWebServer.root} \
+              --index-files index.html \
+              --ignore-hidden-files false \
+              ${if config.modules.staticWebServer.tls.enable then "--https-redirect" else ";"}
           '';
         };
         www-watcher = {
@@ -66,7 +66,7 @@
           serviceConfig = {
             Type = "oneshot";
           };
-          script = "${pkgs.systemdMinimal}/bin/systemctl restart quark.service";
+          script = "${pkgs.systemdMinimal}/bin/systemctl restart static-web-server.service";
         };
       };
       paths = {
@@ -74,7 +74,7 @@
           enable = true;
           wantedBy = [ "multi-user.target" ];
           pathConfig = {
-            PathModified = config.modules.quark.root;
+            PathModified = config.modules.staticWebServer.root;
           };
         };
       };

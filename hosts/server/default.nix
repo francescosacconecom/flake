@@ -31,7 +31,7 @@ rec {
       };
       stagit = {
         enable = true;
-        output = modules.quark.root + "/git";
+        output = modules.staticWebServer.root + "/git";
         baseUrl = "https://${networking.domain}/git";
         assets = {
           faviconPng = ./website/logo.png;
@@ -50,7 +50,7 @@ rec {
         git = root;
       };
     };
-    quark = rec {
+    staticWebServer = rec {
       enable = true;
       root = "/var/www";
       acme = {

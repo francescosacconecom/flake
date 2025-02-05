@@ -8,8 +8,8 @@
     ./networkmanager
     ./openssh
     ./pipewire
-    ./quark
     ./searx
+    ./staticWebServer
     ./sudo
     ./tlp
     ./wayland
