@@ -24,15 +24,10 @@
         hitch = {
           hashedPassword = "!";
           isSystemUser = true;
-          group = "hitch";
-          extraGroups = [
-            "acme"
-          ];
-          createHome = false;
+          group = "www";
+          createHome = true;
+          home = "/var/lib/hitch";
         };
-      };
-      groups = {
-        hitch = { };
       };
     };
 
@@ -42,17 +37,15 @@
       after = [
         "darkhttpd.service"
       ] ++ (if config.modules.darkhttpd.acme.enable then [ "certbot.service" ] else [ ]);
-      serviceConfig = {
-        Type = "oneshot";
-      };
       script = ''
         ${pkgs.hitch}/bin/hitch \
           --backend [localhost]:80 \
-          --frontend [localhost]:443 \
+          --frontend [*]:443 \
           --backend-connect-timeout 30 \
           --ssl-handshake-timeout 30 \
+          --ocsp-dir /var/lib/hitch \
           --user hitch \
-          --group hitch \
+          --group www \
           ${builtins.concatStringsSep " " config.modules.darkhttpd.tls.pemFiles}
       '';
     };

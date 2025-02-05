@@ -21,6 +21,11 @@
       description = "The root directory to statically host.";
       type = lib.types.uniq lib.types.path;
     };
+    servedFiles = lib.mkOption {
+      description = "The list of files or directories to be copied in the root directory.";
+      default = [ ];
+      type = lib.types.listOf lib.types.path;
+    };
   };
 
   config = lib.mkIf config.modules.darkhttpd.enable {
@@ -29,15 +34,19 @@
         darkhttpd = {
           hashedPassword = "!";
           isSystemUser = true;
-          group = "darkhttpd";
+          group = "www";
           createHome = true;
           home = config.modules.darkhttpd.root;
         };
       };
       groups = {
-        darkhttpd = { };
+        www = { };
       };
     };
+
+    system.activationScripts.www_group_permissions = ''
+      chmod --recursive g+rwx ${config.modules.darkhttpd.root}
+    '';
 
     systemd.services.darkhttpd = {
       enable = true;
@@ -51,11 +60,11 @@
           --index index.html \
           --no-listing \
           --uid darkhttpd \
-          --gid darkhttpd \
+          --gid www \
           --no-server-id \
           --timeout 30 \
           --ipv6
-      '';
+      ''
     };
 
     networking.firewall.allowedTCPPorts = [ 80 ];
