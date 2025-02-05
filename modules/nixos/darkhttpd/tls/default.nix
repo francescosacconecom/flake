@@ -25,6 +25,9 @@
           hashedPassword = "!";
           isSystemUser = true;
           group = "hitch";
+          extraGroups = [
+            "acme"
+          ];
           createHome = false;
         };
       };

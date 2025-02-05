@@ -21,16 +21,15 @@ rec {
         enable = true;
         email = "admin@${networking.domain}";
         inherit (networking) domain;
-        output = {
-          fullChain = "/var/lib/acme/fullchain.pem";
-          privateKey = "/var/lib/acme/privkey.pem";
-        };
+        extraDomains = [
+          "*.${networking.domain}"
+        ];
       };
       tls = {
         enable = true;
         pemFiles = [
-          acme.output.fullChain
-          acme.output.privateKey
+          (acme.output + "/fullchain.pem")
+          (acme.output + "/privkey.pem")
         ];
       };
     };
