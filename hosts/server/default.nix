@@ -34,6 +34,12 @@ rec {
     };
     git = {
       enable = true;
+      repositories = {
+        flake = {
+          inherit (inputs.self) description;
+          owner = "Francesco Saccone <francesco@${networking.domain}>";
+        };
+      };
       daemon = {
         enable = true;
       };
