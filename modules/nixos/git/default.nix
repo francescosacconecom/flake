@@ -122,11 +122,11 @@
             |> builtins.attrValues
             |> builtins.concatStringsSep "\n";
         };
-        stagit = {
+        stagit = lib.mkIf stagit.enable {
           enable = true;
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
-            RemainAfterExit = true;
+            Type = "oneshot";
           };
           script = ''
             ${
@@ -253,21 +253,14 @@
               ${stagit.output}
           '';
         };
-        stagit-watcher = {
-          enable = true;
-          wantedBy = [ "multi-user.target" ];
-          serviceConfig = {
-            Type = "oneshot";
-          };
-          script = "${pkgs.systemdMinimal}/bin/systemctl restart stagit.service";
-        };
       };
-      paths = {
-        stagit-watcher = {
+      timers = {
+        stagit = lib.mkIf stagit.enable {
           enable = true;
           wantedBy = [ "multi-user.target" ];
-          pathConfig = {
-            PathModified = "/srv/git";
+          timerConfig = {
+            OnCalendar = "hourly";
+            Persistent = true;
           };
         };
       };
