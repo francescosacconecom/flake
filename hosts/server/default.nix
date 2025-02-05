@@ -39,14 +39,18 @@ rec {
         flake = {
           description = "Francesco Saccone's Nix flake.";
           owner = "Francesco Saccone <francesco@${networking.domain}>";
+          baseUrl = networking.domain;
         };
         website = {
           description = "Francesco Saccone's website content.";
           owner = "Francesco Saccone <francesco@${networking.domain}>";
+          baseUrl = networking.domain;
         };
       };
-      daemon = {
+      stagit = {
         enable = true;
+        output = modules.darkhttpd.root + "/git";
+        baseUrl = "https://${networking.domain}/git";
       };
     };
     openssh.listen = {
