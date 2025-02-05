@@ -18,9 +18,6 @@ rec {
     darkhttpd = rec {
       enable = true;
       root = "/var/www";
-      servedFiles = {
-        "index.html" = pkgs.writeText "index.html" "<h1>Working on this...</h1>";
-      };
       acme = {
         enable = true;
         email = "admin@${networking.domain}";

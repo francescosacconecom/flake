@@ -21,11 +21,6 @@
       description = "The root directory to statically host.";
       type = lib.types.uniq lib.types.path;
     };
-    servedFiles = lib.mkOption {
-      description = "For each file relative to the root, the file containing its content.";
-      default = { };
-      type = lib.types.attrsOf lib.types.path;
-    };
   };
 
   config = lib.mkIf config.modules.darkhttpd.enable {
@@ -52,43 +47,19 @@
       enable = true;
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
-      script =
-        (
-          (
-            config.modules.darkhttpd.servedFiles
-            |> builtins.mapAttrs (
-              relativePath: file: ''
-                ${pkgs.coreutils}/bin/ln \
-                  --force \
-                  --symbolic \
-                  ${file} \
-                  ${config.modules.darkhttpd.root}/${relativePath}
-
-                ${pkgs.coreutils}/bin/chown \
-                  --recursive \
-                  darkhttpd:www \
-                  ${config.modules.darkhttpd.root}/${relativePath}
-              ''
-            )
-            |> builtins.attrValues
-          )
-          ++ [
-            ''
-              ${pkgs.darkhttpd}/bin/darkhttpd \
-                ${config.modules.darkhttpd.root} \
-                --port 80 \
-                --chroot \
-                --index index.html \
-                --no-listing \
-                --uid darkhttpd \
-                --gid www \
-                --no-server-id \
-                --timeout 30 \
-                --ipv6 ${(if config.modules.darkhttpd.tls.enable then " --forward-https" else "")}
-            ''
-          ]
-        )
-        |> builtins.concatStringsSep "\n";
+      script = ''
+        ${pkgs.darkhttpd}/bin/darkhttpd \
+          ${config.modules.darkhttpd.root} \
+          --port 80 \
+          --chroot \
+          --index index.html \
+          --no-listing \
+          --uid darkhttpd \
+          --gid www \
+          --no-server-id \
+          --timeout 30 \
+          --ipv6 ${(if config.modules.darkhttpd.tls.enable then " --forward-https" else "")}
+      '';
     };
 
     networking.firewall.allowedTCPPorts = [ 80 ];
