@@ -168,7 +168,7 @@
         };
       };
 
-    systemd.activationScripts =
+    system.activationScripts =
       let
         inherit (config.modules.git) stagit;
       in
