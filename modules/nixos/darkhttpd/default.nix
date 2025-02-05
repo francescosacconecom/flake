@@ -78,6 +78,7 @@
                 --timeout 30 \
                 --ipv6
             ''
+            ++ (if config.modules.darkhttpd.tls.enable then " --forward-https" else "")
           ]
         )
         |> builtins.concatStringsSep "\n";
