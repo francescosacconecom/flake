@@ -191,8 +191,8 @@
             ${stagit.assets.faviconPng} \
             ${stagit.output}/favicon.png
         '';
-        stagitRepositoriesFaviconPng =
-          lib.mkIf (stagit.assets.faviconPng != null) config.modules.git.repositories
+        stagitRepositoriesFaviconPng = lib.mkIf (stagit.assets.faviconPng != null) (
+          config.modules.git.repositories
           |> builtins.attrNames
           |> builtins.map (name: ''
             ${pkgs.coreutils}/bin/ln \
@@ -201,7 +201,8 @@
               ${stagit.assets.faviconPng} \
               ${stagit.output}/${name}/favicon.png
           '')
-          |> builtins.concatStringsSep "\n";
+          |> builtins.concatStringsSep "\n"
+        );
         stagitIndexLogoPng = lib.mkIf (stagit.assets.logoPng != null) ''
           ${pkgs.coreutils}/bin/ln \
             --force \
@@ -209,8 +210,8 @@
             ${stagit.assets.faviconPng} \
             ${stagit.output}/logo.png
         '';
-        stagitRepositoriesLogoPng =
-          lib.mkIf (stagit.assets.logoPng != null) config.modules.git.repositories
+        stagitRepositoriesLogoPng = lib.mkIf (stagit.assets.logoPng != null) (
+          config.modules.git.repositories
           |> builtins.attrNames
           |> builtins.map (name: ''
             ${pkgs.coreutils}/bin/ln \
@@ -219,7 +220,8 @@
               ${stagit.assets.logoPng} \
               ${stagit.output}/${name}/logo.png
           '')
-          |> builtins.concatStringsSep "\n";
+          |> builtins.concatStringsSep "\n"
+        );
         stagitIndexStyleCss = lib.mkIf (stagit.assets.styleCss != null) ''
           ${pkgs.coreutils}/bin/ln \
             --force \
@@ -227,8 +229,8 @@
             ${stagit.assets.styleCss} \
             ${stagit.output}/style.css
         '';
-        stagitRepositoriesStyleCss =
-          lib.mkIf (stagit.assets.styleCss != null) config.modules.git.repositories
+        stagitRepositoriesStyleCss = lib.mkIf (stagit.assets.styleCss != null) (
+          config.modules.git.repositories
           |> builtins.attrNames
           |> builtins.map (name: ''
             ${pkgs.coreutils}/bin/ln \
@@ -237,7 +239,8 @@
               ${stagit.assets.styleCss} \
               ${stagit.output}/${name}/style.css
           '')
-          |> builtins.concatStringsSep "\n";
+          |> builtins.concatStringsSep "\n"
+        );
       };
 
     programs.git = {
