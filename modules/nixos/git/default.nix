@@ -161,8 +161,8 @@
             enable = true;
             wantedBy = [ "multi-user.target" ];
             timerConfig = {
-              OnCalendar = "hourly";
-              Persistent = true;
+              OnActiveSec = "1min";
+              OnUnitActiveSec = "1min";
             };
           };
         };
@@ -256,8 +256,7 @@
       user = "git";
       group = "git";
       basePath = "/srv/git";
-      repositories =
-        config.modules.git.repositories |> builtins.attrNames |> builtins.map (name: "/srv/git/${name}");
+      repositories = builtins.attrNames config.modules.git.repositories;
 
       port = 9418;
     };
