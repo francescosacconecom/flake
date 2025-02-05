@@ -260,11 +260,7 @@
       group = "git";
       basePath = "/srv/git";
       repositories =
-        config.modules.git.repositories
-        |> builtins.attrNames
-        |> builtins.map (
-          name: "/srv/git/${name}"
-        );
+        config.modules.git.repositories |> builtins.attrNames |> builtins.map (name: "/srv/git/${name}");
 
       port = 9418;
     };
