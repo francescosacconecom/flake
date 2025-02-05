@@ -51,6 +51,11 @@ rec {
         enable = true;
         output = modules.darkhttpd.root + "/git";
         baseUrl = "https://${networking.domain}/git";
+        assets = {
+          faviconPng = ./website/logo.png;
+          logoPng = ./website/logo.png;
+          styleCss = ./website/style/git.css;
+        };
       };
     };
     openssh.listen = {
