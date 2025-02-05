@@ -124,6 +124,25 @@
               |> builtins.attrValues
               |> builtins.concatStringsSep "\n";
           };
+          git-daemon = {
+            enable = true;
+            wantedBy = [ "multi-user.target" ];
+            script = ''
+              ${pkgs.git}/bin/git daemon \
+                --base-path=/srv/git \
+                --listen=localhost \
+                --port=9418 \
+                --user=git \
+                --group=git ${
+                  (
+                    config.modules.git.repositories
+                    |> builtins.attrNames
+                    |> builtins.map (name: "/srv/git/${name}")
+                    |> builtins.concatStringsSep " "
+                  )
+                }
+            '';
+          };
           stagit = lib.mkIf stagit.enable {
             enable = true;
             wantedBy = [ "multi-user.target" ];
@@ -250,19 +269,6 @@
       config = {
         init.defaultBranch = "master";
       };
-    };
-
-    services.gitDaemon = {
-      enable = true;
-      package = pkgs.git;
-
-      user = "git";
-      group = "git";
-      basePath = "/srv/git";
-      repositories =
-        config.modules.git.repositories |> builtins.attrNames |> builtins.map (name: "/srv/git/${name}");
-
-      port = 9418;
     };
 
     networking.firewall.allowedTCPPorts = [ 9418 ];
