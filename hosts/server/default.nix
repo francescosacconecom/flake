@@ -19,7 +19,7 @@ rec {
       enable = true;
       root = "/var/www";
       servedFiles = {
-        "index.html" = pkgs.writeText "<h1>Working on this...</h1>";
+        "index.html" = pkgs.writeText "index.html" "<h1>Working on this...</h1>";
       };
       acme = {
         enable = true;
@@ -37,7 +37,7 @@ rec {
       enable = true;
       repositories = {
         flake = {
-          inherit (inputs.self) description;
+          description = "Francesco Saccone's Nix flake.";
           owner = "Francesco Saccone <francesco@${networking.domain}>";
         };
       };
