@@ -52,19 +52,35 @@
       enable = true;
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
-      script = ''
-        ${pkgs.darkhttpd}/bin/darkhttpd \
-          ${config.modules.darkhttpd.root} \
-          --port 80 \
-          --chroot \
-          --index index.html \
-          --no-listing \
-          --uid darkhttpd \
-          --gid www \
-          --no-server-id \
-          --timeout 30 \
-          --ipv6
-      ''
+      script =
+        (
+          (
+            config.modules.darkhttpd.servedFiles
+            |> builtins.map (file: ''
+              ${pkgs.coreutils}/bin/ln \
+                --force \
+                --symbolic \
+                ${config.modules.darkhttpd.root}/${builtins.baseNameOf file} \
+                ${file}
+            '')
+          )
+          ++ [
+            ''
+              ${pkgs.darkhttpd}/bin/darkhttpd \
+                ${config.modules.darkhttpd.root} \
+                --port 80 \
+                --chroot \
+                --index index.html \
+                --no-listing \
+                --uid darkhttpd \
+                --gid www \
+                --no-server-id \
+                --timeout 30 \
+                --ipv6
+            ''
+          ]
+        )
+        |> builtins.concatStringsSep "\n";
     };
 
     networking.firewall.allowedTCPPorts = [ 80 ];
