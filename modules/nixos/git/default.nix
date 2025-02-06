@@ -130,6 +130,7 @@
             script = ''
               ${pkgs.git}/bin/git daemon \
                 --base-path=/srv/git \
+                --reuseaddr \
                 --listen=localhost \
                 --port=9418 \
                 --user=git \
