@@ -127,6 +127,10 @@
           git-daemon = {
             enable = true;
             wantedBy = [ "multi-user.target" ];
+            after = [ "network.target" ];
+            serviceConfig = {
+              Restart = "always";
+            };
             script = ''
               ${pkgs.git}/bin/git daemon \
                 --base-path=/srv/git \
