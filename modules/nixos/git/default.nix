@@ -6,6 +6,10 @@
   ...
 }:
 {
+  imports = [
+    ./cloned
+  ];
+
   options.modules.git = {
     enable = lib.mkOption {
       description = "Whether to set up a Git server.";
