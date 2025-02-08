@@ -21,6 +21,24 @@
       description = "The root directory to statically host.";
       type = lib.types.uniq lib.types.path;
     };
+    symlinks = lib.mkOption {
+      description = "The list of symlink configurations to be put in the root folder.";
+      default = [ ];
+      type =
+        lib.types.submodule {
+          options = {
+            target = lib.mkOption {
+              description = "The target file.";
+              type = lib.types.uniq lib.types.path;
+            };
+            name = lib.mkOption {
+              description = "The name of the symlink.";
+              type = lib.types.uniq lib.types.str;
+            };
+          };
+        }
+        |> lib.types.listOf;
+    };
   };
 
   config = lib.mkIf config.modules.staticWebServer.enable {
@@ -45,6 +63,34 @@
 
     systemd = {
       services = {
+        static-web-server-symlinks = {
+          enable = true;
+          wantedBy = [ "multi-user.target" ];
+          serviceConfig = {
+            User = "root";
+            Group = "root";
+            Type = "oneshot";
+          };
+          script =
+            config.modules.staticWebServer.symlinks
+            |> builtins.map (
+              { target, name }:
+              ''
+                ${pkgs.coreutils}/bin/ln \
+                  --force \
+                  --symbolic \
+                  ${target} \
+                  ${config.modules.staticWebServer.root}/${name}
+
+                ${pkgs.coreutils}/bin/chown \
+                  --recursive \
+                  --no-dereference \
+                  static-web-server:www \
+                  ${config.modules.staticWebServer.root}/${name}
+              ''
+            )
+            |> builtins.concatStringsSep "\n";
+        };
         static-web-server = {
           enable = true;
           wantedBy = [ "multi-user.target" ];

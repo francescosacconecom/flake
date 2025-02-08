@@ -64,6 +64,12 @@ rec {
     staticWebServer = rec {
       enable = true;
       root = "/var/www";
+      symlinks = [
+        {
+          target = config.modules.git.stagit.output;
+          name = "git";
+        }
+      ];
       acme = {
         enable = true;
         email = "admin@${networking.domain}";
