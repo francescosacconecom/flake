@@ -9,6 +9,7 @@
   imports = [
     ./cloned
     ./daemon
+    ./stagit
   ];
 
   options.modules.git = {
