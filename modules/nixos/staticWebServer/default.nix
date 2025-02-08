@@ -17,8 +17,10 @@
       default = false;
       type = lib.types.bool;
     };
-    root = lib.mkOption {
+    directory = lib.mkOption {
       description = "The root directory to statically host.";
+      default = "/var/www";
+      readOnly = true;
       type = lib.types.uniq lib.types.path;
     };
     symlinks = lib.mkOption {
@@ -49,7 +51,7 @@
           isSystemUser = true;
           group = "www";
           createHome = true;
-          home = config.modules.staticWebServer.root;
+          home = config.modules.staticWebServer.directory;
         };
       };
       groups = {
@@ -58,7 +60,7 @@
     };
 
     system.activationScripts.wwwGroupPermissions = ''
-      ${pkgs.coreutils}/bin/chmod --recursive g+rwx ${config.modules.staticWebServer.root}
+      ${pkgs.coreutils}/bin/chmod --recursive g+rwx ${config.modules.staticWebServer.directory}
     '';
 
     systemd = {
@@ -80,13 +82,13 @@
                   --force \
                   --symbolic \
                   ${target} \
-                  ${config.modules.staticWebServer.root}/${name}
+                  ${config.modules.staticWebServer.directory}/${name}
 
                 ${pkgs.coreutils}/bin/chown \
                   --recursive \
                   --no-dereference \
                   static-web-server:www \
-                  ${config.modules.staticWebServer.root}/${name}
+                  ${config.modules.staticWebServer.directory}/${name}
               ''
             )
             |> builtins.concatStringsSep "\n";
@@ -99,7 +101,7 @@
             ${pkgs.static-web-server}/bin/static-web-server \
               --port 80 \
               --http2 false \
-              --root ${config.modules.staticWebServer.root} \
+              --root ${config.modules.staticWebServer.directory} \
               --index-files index.html \
               --ignore-hidden-files false \
               ${if config.modules.staticWebServer.tls.enable then "--https-redirect" else ";"}
@@ -120,7 +122,7 @@
           enable = true;
           wantedBy = [ "multi-user.target" ];
           pathConfig = {
-            PathModified = config.modules.staticWebServer.root;
+            PathModified = config.modules.staticWebServer.directory;
           };
         };
       };

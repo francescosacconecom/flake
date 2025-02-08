@@ -63,7 +63,6 @@ rec {
     };
     staticWebServer = rec {
       enable = true;
-      root = "/var/www";
       symlinks = [
         {
           target = config.modules.git.stagit.output;

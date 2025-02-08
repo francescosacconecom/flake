@@ -36,7 +36,7 @@
                 inherit (acme) email domain;
 
                 group = "www";
-                webroot = config.modules.staticWebServer.root;
+                webroot = config.modules.staticWebServer.directory;
               };
             };
         };
