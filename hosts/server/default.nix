@@ -29,9 +29,20 @@ rec {
           baseUrl = networking.domain;
         };
       };
+      cloned = {
+        enable = true;
+        repositories = {
+          website = {
+            url = "${config.modules.git.directory}/website";
+            branch = "master";
+          };
+        };
+      };
+      daemon = {
+        enable = true;
+      };
       stagit = {
         enable = true;
-        output = modules.staticWebServer.root + "/git";
         baseUrl = "https://${networking.domain}/git";
         assets = {
           faviconPng = ./website/logo.png;
