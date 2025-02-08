@@ -46,12 +46,23 @@
       };
     };
 
-    system.activationScripts.wwwGroupPermissions = ''
-      ${pkgs.coreutils}/bin/chmod --recursive g+rwx ${config.modules.staticWebServer.directory}
-    '';
-
     systemd = {
       services = {
+        static-web-server-permissions = {
+          enable = true;
+          wantedBy = [ "multi-user.target" ];
+          serviceConfig = {
+            User = "root";
+            Group = "root";
+            Type = "oneshot";
+          };
+          script = ''
+            ${pkgs.coreutils}/bin/chmod \
+              --recursive \
+              g+rwx \
+              ${config.modules.staticWebServer.directory}
+          '';
+        };
         static-web-server-symlinks = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
