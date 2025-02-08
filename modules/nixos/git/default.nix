@@ -8,6 +8,7 @@
 {
   imports = [
     ./cloned
+    ./daemon
   ];
 
   options.modules.git = {
