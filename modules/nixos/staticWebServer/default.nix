@@ -24,22 +24,9 @@
       type = lib.types.uniq lib.types.path;
     };
     symlinks = lib.mkOption {
-      description = "The list of symlink configurations to be put in the root folder.";
-      default = [ ];
-      type =
-        lib.types.submodule {
-          options = {
-            target = lib.mkOption {
-              description = "The target file.";
-              type = lib.types.uniq lib.types.path;
-            };
-            name = lib.mkOption {
-              description = "The name of the symlink.";
-              type = lib.types.uniq lib.types.str;
-            };
-          };
-        }
-        |> lib.types.listOf;
+      description = "For each symlink name, which will be created in the root directory, its target.";
+      default = { };
+      type = lib.types.attrsOf lib.types.path;
     };
   };
 
@@ -75,9 +62,8 @@
           };
           script =
             config.modules.staticWebServer.symlinks
-            |> builtins.map (
-              { target, name }:
-              ''
+            |> builtins.mapAttrs (
+              name: target: ''
                 ${pkgs.coreutils}/bin/ln \
                   --force \
                   --symbolic \
@@ -91,6 +77,7 @@
                   ${config.modules.staticWebServer.directory}/${name}
               ''
             )
+            |> builtins.attrValues
             |> builtins.concatStringsSep "\n";
         };
         static-web-server = {

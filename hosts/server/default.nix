@@ -63,12 +63,9 @@ rec {
     };
     staticWebServer = rec {
       enable = true;
-      symlinks = [
-        {
-          target = config.modules.git.stagit.output;
-          name = "git";
-        }
-      ];
+      symlinks = {
+        git = config.modules.git.stagit.output;
+      };
       acme = {
         enable = true;
         email = "admin@${networking.domain}";
