@@ -87,10 +87,21 @@
             |> builtins.attrValues
             |> builtins.concatStringsSep "\n";
         };
-        static-web-server = {
+        static-web-server = rec {
           enable = true;
           wantedBy = [ "multi-user.target" ];
-          requires = [ "static-web-server-symlinks.service" ];
+          requires =
+            [
+              "static-web-server-symlinks.service"
+            ]
+            ++ (
+              if config.modules.staticWebServer.tls.enable then
+                [
+                  "hitch.service"
+                ]
+              else
+                [ ]
+            );
           after = [ "network.target" ];
           serviceConfig = {
             User = "root";
@@ -130,7 +141,7 @@
           enable = true;
           wantedBy = [ "multi-user.target" ];
           timerConfig = {
-            OnCalendar = "*:0";
+            OnCalendar = "*:0/1";
             Persistent = true;
           };
         };
