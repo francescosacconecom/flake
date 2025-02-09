@@ -48,35 +48,28 @@
 
     systemd = {
       services = {
-        static-web-server-permissions = {
+        static-web-server-directory = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
+          before = lib.mkIf config.modules.staticWebServer.acme.enable [
+            "acme-${config.modules.staticWebServer.acme.domain}.service"
+          ];
           serviceConfig = {
             User = "root";
             Group = "root";
             Type = "oneshot";
           };
           script = ''
+            ${pkgs.findutils}/bin/find ${config.modules.staticWebServer.directory} \
+              -mindepth 1 -not -name '.well-known' -exec ${pkgs.coreutils}/bin/rm -Rf {} +
             ${pkgs.coreutils}/bin/chmod -R g+rwx ${config.modules.staticWebServer.directory}
-          '';
-        };
-        static-web-server-clean = {
-          enable = true;
-          wantedBy = [ "multi-user.target" ];
-          serviceConfig = {
-            User = "root";
-            Group = "root";
-            Type = "oneshot";
-          };
-          script = ''
-            ${pkgs.coreutils}/bin/rm -Rf ${config.modules.staticWebServer.directory}/*
           '';
         };
         static-web-server-symlinks = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
-          requires = [ "static-web-server-clean.service" ];
-          after = [ "static-web-server-clean.service" ];
+          requires = [ "static-web-server-directory.service" ];
+          after = [ "static-web-server-directory.service" ];
           serviceConfig = {
             User = "root";
             Group = "root";
@@ -88,7 +81,7 @@
               name: target: ''
                 ${pkgs.coreutils}/bin/mkdir -p ${config.modules.staticWebServer.directory}/${builtins.dirOf name}
                 ${pkgs.coreutils}/bin/ln -sf ${target} ${config.modules.staticWebServer.directory}/${name}
-                ${pkgs.coreutils}/bin/chown -Rh static-web-server:www ${config.modules.staticWebServer.directory}/${name}
+                ${pkgs.coreutils}/bin/chown -Rh static-web-server:www ${config.modules.staticWebServer.directory}
               ''
             )
             |> builtins.attrValues
