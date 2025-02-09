@@ -51,10 +51,7 @@
             Type = "oneshot";
           };
           script = ''
-            ${pkgs.coreutils}/bin/rm \
-              --recursive \
-              --force \
-              ${config.modules.pandoc.output}/*
+            ${pkgs.coreutils}/bin/rm -Rf ${config.modules.pandoc.output}/*
           '';
         };
         pandoc = {

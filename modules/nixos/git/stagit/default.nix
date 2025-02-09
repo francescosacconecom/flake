@@ -59,10 +59,7 @@
             script = ''
               ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}
 
-              ${pkgs.coreutils}/bin/chown \
-                --recursive \
-                git:git \
-                ${stagit.output}
+              ${pkgs.coreutils}/bin/chown -R git:git ${stagit.output}
             '';
           };
           stagit-clean = {
@@ -74,12 +71,7 @@
               Type = "oneshot";
             };
             script = ''
-              ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}
-
-              ${pkgs.coreutils}/bin/chown \
-                --recursive \
-                git:git \
-                ${stagit.output}
+              ${pkgs.coreutils}/bin/rm -Rf ${stagit.output}/*
             '';
           };
           stagit = {
@@ -107,10 +99,7 @@
                   |> builtins.map (name: ''
                     ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}/${name}
                     cd ${stagit.output}/${name}
-
-                    ${pkgs.stagit}/bin/stagit \
-                      -u ${stagit.baseUrl}/ \
-                      ${config.modules.git.directory}/${name}
+                    ${pkgs.stagit}/bin/stagit -u ${stagit.baseUrl}/ ${config.modules.git.directory}/${name}
                   '')
                   |> builtins.concatStringsSep "\n"
                 )
@@ -138,54 +127,30 @@
               Group = "git";
               Type = "oneshot";
             };
-            script = ''
-              ${pkgs.coreutils}/bin/ln \
-                --force \
-                --symbolic \
-                ${stagit.assets.faviconPng} \
-                ${stagit.output}/favicon.png
+            script =
+              let
+                ln = target: name: "${pkgs.coreutils}/bin/ln -sf ${target} ${name}";
+              in
+              ''
+                ${ln stagit.assets.faviconPng "${stagit.output}/favicon.png"}
+                ${ln stagit.assets.logoPng "${stagit.output}/logo.png"}
+                ${ln stagit.assets.styleCss "${stagit.output}/style.css"}
 
-              ${pkgs.coreutils}/bin/ln \
-                --force \
-                --symbolic \
-                ${stagit.assets.faviconPng} \
-                ${stagit.output}/logo.png
+                ${
+                  (
+                    config.modules.git.repositories
+                    |> builtins.attrNames
+                    |> builtins.map (name: ''
+                      ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}/${name}
 
-              ${pkgs.coreutils}/bin/ln \
-                --force \
-                --symbolic \
-                ${stagit.assets.styleCss} \
-                ${stagit.output}/style.css
-
-              ${
-                (
-                  config.modules.git.repositories
-                  |> builtins.attrNames
-                  |> builtins.map (name: ''
-                    ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}/${name}
-
-                    ${pkgs.coreutils}/bin/ln \
-                      --force \
-                      --symbolic \
-                      ${stagit.assets.faviconPng} \
-                      ${stagit.output}/${name}/favicon.png
-
-                    ${pkgs.coreutils}/bin/ln \
-                      --force \
-                      --symbolic \
-                      ${stagit.assets.logoPng} \
-                      ${stagit.output}/${name}/logo.png
-
-                    ${pkgs.coreutils}/bin/ln \
-                      --force \
-                      --symbolic \
-                      ${stagit.assets.styleCss} \
-                      ${stagit.output}/${name}/style.css
-                  '')
-                  |> builtins.concatStringsSep "\n"
-                )
-              }
-            '';
+                      ${ln stagit.assets.faviconPng "${stagit.output}/${name}/favicon.png"}
+                      ${ln stagit.assets.logoPng "${stagit.output}/${name}/logo.png"}
+                      ${ln stagit.assets.styleCss "${stagit.output}/${name}/style.css"}
+                    '')
+                    |> builtins.concatStringsSep "\n"
+                  )
+                }
+              '';
           };
         };
         timers = {

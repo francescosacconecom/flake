@@ -55,11 +55,7 @@
             };
             script = ''
               ${pkgs.coreutils}/bin/mkdir -p ${config.modules.git.cloned.output}
-
-              ${pkgs.coreutils}/bin/chown \
-                --recursive \
-                git:git \
-                ${config.modules.git.cloned.output}
+              ${pkgs.coreutils}/bin/chown -R git:git ${config.modules.git.cloned.output}
             '';
           };
           git-cloned = {
@@ -78,23 +74,9 @@
                 { url, branch }:
                 ''
                   ${pkgs.coreutils}/bin/mkdir -p ${cloned.output}/${name}
-
-                  ${pkgs.git}/bin/git \
-                    clone \
-                    ${url} \
-                    ${cloned.output}/${name} \
-                      || true
-
-                  ${pkgs.git}/bin/git \
-                    -C ${cloned.output}/${name} \
-                    pull \
-                    origin \
-                    ${branch}
-
-                  ${pkgs.git}/bin/git \
-                    -C ${cloned.output}/${name} \
-                    checkout \
-                    ${branch}
+                  ${pkgs.git}/bin/git clone ${url} ${cloned.output}/${name} || true
+                  ${pkgs.git}/bin/git -C ${cloned.output}/${name} pull origin ${branch}
+                  ${pkgs.git}/bin/git -C ${cloned.output}/${name} checkout ${branch}
                 ''
               )
               |> builtins.attrValues

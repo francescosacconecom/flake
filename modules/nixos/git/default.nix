@@ -82,10 +82,7 @@
             Type = "oneshot";
           };
           script = ''
-            ${pkgs.coreutils}/bin/chmod \
-              --recursive \
-              g+r \
-              ${config.modules.git.directory}
+            ${pkgs.coreutils}/bin/chmod -R g+r ${config.modules.git.directory}
           '';
         };
         git = {
@@ -106,12 +103,7 @@
                 baseUrl,
               }:
               ''
-                ${pkgs.git}/bin/git \
-                  init \
-                  --quiet \
-                  --bare \
-                  --initial-branch master \
-                  ${config.modules.git.directory}/${name}
+                ${pkgs.git}/bin/git init -q --bare -b master ${config.modules.git.directory}/${name}
 
                 ${pkgs.coreutils}/bin/echo "${description}" > ${config.modules.git.directory}/${name}/description
                 ${pkgs.coreutils}/bin/echo "${owner}" > ${config.modules.git.directory}/${name}/owner

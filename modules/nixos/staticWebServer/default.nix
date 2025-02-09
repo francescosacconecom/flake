@@ -57,10 +57,7 @@
             Type = "oneshot";
           };
           script = ''
-            ${pkgs.coreutils}/bin/chmod \
-              --recursive \
-              g+rwx \
-              ${config.modules.staticWebServer.directory}
+            ${pkgs.coreutils}/bin/chmod -R g+rwx ${config.modules.staticWebServer.directory}
           '';
         };
         static-web-server-symlinks-clean = {
@@ -72,10 +69,7 @@
             Type = "oneshot";
           };
           script = ''
-            ${pkgs.coreutils}/bin/rm \
-              --recursive \
-              --force \
-              ${config.modules.staticWebServer.directory}/*
+            ${pkgs.coreutils}/bin/rm -Rf ${config.modules.staticWebServer.directory}/*
           '';
         };
         static-web-server-symlinks = {
@@ -91,17 +85,8 @@
             config.modules.staticWebServer.symlinks
             |> builtins.mapAttrs (
               name: target: ''
-                ${pkgs.coreutils}/bin/ln \
-                  --force \
-                  --symbolic \
-                  ${target} \
-                  ${config.modules.staticWebServer.directory}/${name}
-
-                ${pkgs.coreutils}/bin/chown \
-                  --recursive \
-                  --no-dereference \
-                  static-web-server:www \
-                  ${config.modules.staticWebServer.directory}/${name}
+                ${pkgs.coreutils}/bin/ln -sF ${target} ${config.modules.staticWebServer.directory}/${name}
+                ${pkgs.coreutils}/bin/chown -Rh static-web-server:www ${config.modules.staticWebServer.directory}/${name}
               ''
             )
             |> builtins.attrValues
