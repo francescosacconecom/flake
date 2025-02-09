@@ -7,6 +7,7 @@
     ./monerod
     ./networkmanager
     ./openssh
+    ./pandoc
     ./pipewire
     ./searx
     ./staticWebServer

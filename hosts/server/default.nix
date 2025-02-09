@@ -61,6 +61,10 @@ rec {
         git = root;
       };
     };
+    pandoc = {
+      enable = true;
+      input = "${config.modules.git.cloned.output}/website";
+    };
     staticWebServer = rec {
       enable = true;
       symlinks = {
