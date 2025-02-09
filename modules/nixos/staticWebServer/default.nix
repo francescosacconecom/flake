@@ -85,6 +85,7 @@
             config.modules.staticWebServer.symlinks
             |> builtins.mapAttrs (
               name: target: ''
+                ${pkgs.coreutils}/bin/mkdir -p ${config.modules.staticWebServer.directory}/${builtins.dirOf name}
                 ${pkgs.coreutils}/bin/ln -sF ${target} ${config.modules.staticWebServer.directory}/${name}
                 ${pkgs.coreutils}/bin/chown -Rh static-web-server:www ${config.modules.staticWebServer.directory}/${name}
               ''
