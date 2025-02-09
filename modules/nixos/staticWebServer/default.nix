@@ -63,9 +63,24 @@
               ${config.modules.staticWebServer.directory}
           '';
         };
+        static-web-server-symlinks-clean = {
+          enable = true;
+          wantedBy = [ "multi-user.target" ];
+          serviceConfig = {
+            User = "static-web-server";
+            Group = "www";
+            Type = "oneshot";
+          };
+          script = ''
+            ${pkgs.coreutils}/bin/rm \
+              --recursive \
+              ${config.modules.staticWebServer.directory}/*
+          '';
+        };
         static-web-server-symlinks = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
+          after = [ "static-web-server-symlinks-clean" ];
           serviceConfig = {
             User = "root";
             Group = "root";
