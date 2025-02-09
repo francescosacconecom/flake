@@ -65,12 +65,34 @@
                 ${stagit.output}
             '';
           };
+          stagit-clean = {
+            enable = true;
+            wantedBy = [ "multi-user.target" ];
+            serviceConfig = {
+              User = "root";
+              Group = "root";
+              Type = "oneshot";
+            };
+            script = ''
+              ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}
+
+              ${pkgs.coreutils}/bin/chown \
+                --recursive \
+                git:git \
+                ${stagit.output}
+            '';
+          };
           stagit = {
             enable = true;
             wantedBy = [ "multi-user.target" ];
             after = [
+              "stagit-clean.service"
               "git-permissions.service"
               "stagit-directory.service"
+            ];
+            requires = [
+              "stagit-clean.service"
+              "stagit-static-assets.service"
             ];
             serviceConfig = {
               User = "git";
