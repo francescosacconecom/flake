@@ -69,6 +69,7 @@ rec {
       enable = true;
       symlinks = {
         git = config.modules.git.stagit.output;
+        "index.html" = "${config.modules.pandoc.output}/index.html";
       };
       acme = {
         enable = true;
