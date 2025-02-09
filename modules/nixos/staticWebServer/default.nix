@@ -60,12 +60,12 @@
             ${pkgs.coreutils}/bin/chmod -R g+rwx ${config.modules.staticWebServer.directory}
           '';
         };
-        static-web-server-symlinks-clean = {
+        static-web-server-clean = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
-            User = "static-web-server";
-            Group = "www";
+            User = "root";
+            Group = "root";
             Type = "oneshot";
           };
           script = ''
@@ -75,7 +75,8 @@
         static-web-server-symlinks = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
-          after = [ "static-web-server-symlinks-clean.service" ];
+          requires = [ "static-web-server-clean.service" ];
+          after = [ "static-web-server-clean.service" ];
           serviceConfig = {
             User = "root";
             Group = "root";
@@ -86,7 +87,7 @@
             |> builtins.mapAttrs (
               name: target: ''
                 ${pkgs.coreutils}/bin/mkdir -p ${config.modules.staticWebServer.directory}/${builtins.dirOf name}
-                ${pkgs.coreutils}/bin/ln -sF ${target} ${config.modules.staticWebServer.directory}/${name}
+                ${pkgs.coreutils}/bin/ln -sf ${target} ${config.modules.staticWebServer.directory}/${name}
                 ${pkgs.coreutils}/bin/chown -Rh static-web-server:www ${config.modules.staticWebServer.directory}/${name}
               ''
             )
@@ -96,7 +97,12 @@
         static-web-server = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
+          requires = [ "static-web-server-symlinks.service" ];
           after = [ "network.target" ];
+          serviceConfig = {
+            User = "root";
+            Group = "root";
+          };
           script = ''
             ${pkgs.static-web-server}/bin/static-web-server \
               --port 80 \
@@ -107,7 +113,7 @@
               ${if config.modules.staticWebServer.tls.enable then "--https-redirect" else ";"}
           '';
         };
-        www-watcher = {
+        static-web-server-restarter = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
           after = [ "network.target" ];
@@ -118,11 +124,21 @@
         };
       };
       paths = {
-        www-watcher = {
+        static-web-server-restarter = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
           pathConfig = {
-            PathModified = config.modules.staticWebServer.directory;
+            pathModified = config.modules.staticWebServer.directory;
+          };
+        };
+      };
+      timers = {
+        static-web-server-restarter = {
+          enable = true;
+          wantedBy = [ "multi-user.target" ];
+          timerConfig = {
+            OnCalendar = "*-*-* *:*:00";
+            Persistent = true;
           };
         };
       };

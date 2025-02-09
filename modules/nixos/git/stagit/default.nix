@@ -58,68 +58,19 @@
             };
             script = ''
               ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}
-
-              ${pkgs.coreutils}/bin/chown -R git:git ${stagit.output}
-            '';
-          };
-          stagit-clean = {
-            enable = true;
-            wantedBy = [ "multi-user.target" ];
-            serviceConfig = {
-              User = "root";
-              Group = "root";
-              Type = "oneshot";
-            };
-            script = ''
               ${pkgs.coreutils}/bin/rm -Rf ${stagit.output}/*
+              ${pkgs.coreutils}/bin/chown -R git:git ${stagit.output}
             '';
           };
           stagit = {
             enable = true;
             wantedBy = [ "multi-user.target" ];
             after = [
-              "stagit-clean.service"
               "git-permissions.service"
               "stagit-directory.service"
             ];
             requires = [
-              "stagit-clean.service"
-              "stagit-static-assets.service"
-            ];
-            serviceConfig = {
-              User = "git";
-              Group = "git";
-              Type = "oneshot";
-            };
-            script = ''
-              ${
-                (
-                  config.modules.git.repositories
-                  |> builtins.attrNames
-                  |> builtins.map (name: ''
-                    ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}/${name}
-                    cd ${stagit.output}/${name}
-                    ${pkgs.stagit}/bin/stagit -u ${stagit.baseUrl}/ ${config.modules.git.directory}/${name}
-                  '')
-                  |> builtins.concatStringsSep "\n"
-                )
-              }
-
-              ${pkgs.stagit}/bin/stagit-index ${
-                (
-                  config.modules.git.repositories
-                  |> builtins.attrNames
-                  |> builtins.map (name: "${config.modules.git.directory}/${name}")
-                  |> builtins.concatStringsSep " "
-                )
-              } > ${stagit.output}/index.html
-            '';
-          };
-          stagit-static-assets = {
-            enable = true;
-            wantedBy = [ "multi-user.target" ];
-            after = [
-              "stagit.service"
+              "git-permissions.service"
               "stagit-directory.service"
             ];
             serviceConfig = {
@@ -132,6 +83,28 @@
                 ln = target: name: "${pkgs.coreutils}/bin/ln -sf ${target} ${name}";
               in
               ''
+                ${
+                  (
+                    config.modules.git.repositories
+                    |> builtins.attrNames
+                    |> builtins.map (name: ''
+                      ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}/${name}
+                      cd ${stagit.output}/${name}
+                      ${pkgs.stagit}/bin/stagit -u ${stagit.baseUrl}/ ${config.modules.git.directory}/${name}
+                    '')
+                    |> builtins.concatStringsSep "\n"
+                  )
+                }
+
+                ${pkgs.stagit}/bin/stagit-index ${
+                  (
+                    config.modules.git.repositories
+                    |> builtins.attrNames
+                    |> builtins.map (name: "${config.modules.git.directory}/${name}")
+                    |> builtins.concatStringsSep " "
+                  )
+                } > ${stagit.output}/index.html
+
                 ${ln stagit.assets.faviconPng "${stagit.output}/favicon.png"}
                 ${ln stagit.assets.logoPng "${stagit.output}/logo.png"}
                 ${ln stagit.assets.styleCss "${stagit.output}/style.css"}
@@ -158,8 +131,8 @@
             enable = true;
             wantedBy = [ "multi-user.target" ];
             timerConfig = {
-              OnActiveSec = "1min";
-              OnUnitActiveSec = "1min";
+              OnCalendar = "*-*-* *:*:00";
+              Persistent = true;
             };
           };
         };

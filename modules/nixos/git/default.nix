@@ -75,7 +75,6 @@
         git-permissions = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
-          after = [ "git.service" ];
           serviceConfig = {
             User = "git";
             Group = "git";
@@ -88,6 +87,8 @@
         git = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
+          requires = [ "git-permissions.service" ];
+          before = [ "git-permissions.service" ];
           serviceConfig = {
             User = "git";
             Group = "git";

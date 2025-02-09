@@ -88,8 +88,8 @@
             enable = true;
             wantedBy = [ "multi-user.target" ];
             timerConfig = {
-              OnBootSec = "15min";
-              OnUnitActiveSec = "15min";
+              OnCalendar = "*-*-* *:*/15:00";
+              Persistent = true;
             };
           };
         };
