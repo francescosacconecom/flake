@@ -6,7 +6,7 @@
   ...
 }:
 {
-  options.modules.git.cloned = {
+  options.modules.git.clone = {
     enable = lib.mkOption {
       description = "Whether to enable the service to clone and sync Git remote repositories.";
       default = false;
@@ -40,12 +40,12 @@
 
   config =
     let
-      inherit (config.modules.git) cloned;
+      inherit (config.modules.git) clone;
     in
-    lib.mkIf (config.modules.git.enable && cloned.enable) {
+    lib.mkIf (config.modules.git.enable && clone.enable) {
       systemd = {
         services = {
-          git-cloned-directory = {
+          git-clone-directory = {
             enable = true;
             wantedBy = [ "multi-user.target" ];
             serviceConfig = {
@@ -54,29 +54,29 @@
               Type = "oneshot";
             };
             script = ''
-              ${pkgs.coreutils}/bin/mkdir -p ${config.modules.git.cloned.output}
-              ${pkgs.coreutils}/bin/chown -R git:git ${config.modules.git.cloned.output}
+              ${pkgs.coreutils}/bin/mkdir -p ${config.modules.git.clone.output}
+              ${pkgs.coreutils}/bin/chown -R git:git ${config.modules.git.clone.output}
             '';
           };
-          git-cloned = {
+          git-clone = {
             enable = true;
             wantedBy = [ "multi-user.target" ];
-            after = [ "git-cloned-directory.service" ];
+            after = [ "git-clone-directory.service" ];
             serviceConfig = {
               User = "git";
               Group = "git";
               Type = "oneshot";
             };
             script =
-              cloned.repositories
+              clone.repositories
               |> builtins.mapAttrs (
                 name:
                 { url, branch }:
                 ''
-                  ${pkgs.coreutils}/bin/mkdir -p ${cloned.output}/${name}
-                  ${pkgs.git}/bin/git clone ${url} ${cloned.output}/${name} || true
-                  ${pkgs.git}/bin/git -C ${cloned.output}/${name} pull origin ${branch}
-                  ${pkgs.git}/bin/git -C ${cloned.output}/${name} checkout ${branch}
+                  ${pkgs.coreutils}/bin/mkdir -p ${clone.output}/${name}
+                  ${pkgs.git}/bin/git clone ${url} ${clone.output}/${name} || true
+                  ${pkgs.git}/bin/git -C ${clone.output}/${name} pull origin ${branch}
+                  ${pkgs.git}/bin/git -C ${clone.output}/${name} checkout ${branch}
                 ''
               )
               |> builtins.attrValues
@@ -84,7 +84,7 @@
           };
         };
         timers = {
-          git-cloned = {
+          git-clone = {
             enable = true;
             wantedBy = [ "multi-user.target" ];
             timerConfig = {

@@ -29,7 +29,7 @@ rec {
           baseUrl = networking.domain;
         };
       };
-      cloned = {
+      clone = {
         enable = true;
         repositories = {
           website = {
@@ -63,11 +63,11 @@ rec {
     };
     pandoc = {
       enable = true;
-      input = "${config.modules.git.cloned.output}/website";
+      input = "${config.modules.git.clone.output}/website";
       components = {
-        head = "${config.modules.git.cloned.output}/website/components/head.html";
-        header = "${config.modules.git.cloned.output}/website/components/header.html";
-        footer = "${config.modules.git.cloned.output}/website/components/footer.html";
+        head = "${config.modules.git.clone.output}/website/components/head.html";
+        header = "${config.modules.git.clone.output}/website/components/header.html";
+        footer = "${config.modules.git.clone.output}/website/components/footer.html";
       };
     };
     staticWebServer = rec {
@@ -75,8 +75,8 @@ rec {
       symlinks = {
         git = config.modules.git.stagit.output;
         "index.html" = "${config.modules.pandoc.output}/index.html";
-        "public/style.css" = "${config.modules.git.cloned.output}/website/style.css";
-        "public/license" = "${config.modules.git.cloned.output}/website/LICENSE";
+        "public/style.css" = "${config.modules.git.clone.output}/website/style.css";
+        "public/license" = "${config.modules.git.clone.output}/website/LICENSE";
         "public/openpgp.asc" = ../../homes/francesco/home/pgp.asc;
       };
       acme = {

@@ -7,7 +7,7 @@
 }:
 {
   imports = [
-    ./cloned
+    ./clone
     ./daemon
     ./stagit
   ];
