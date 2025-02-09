@@ -42,26 +42,54 @@
 
     systemd = {
       services = {
-        pandoc = {
+        pandoc-clean = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
             User = "pandoc";
             Group = "pandoc";
             Type = "oneshot";
-            ExecStart = let
-              script = pkgs.writeShellScriptBin "pandoc" ''
-                find "${config.modules.pandoc.input}" -name '*.md' | while read -r md_file; do
-                  relative_path="$\{md_file#${config.modules.pandoc.input}/}"
+          };
+          script = ''
+            ${pkgs.coreutils}/bin/rm \
+              --recursive \
+              --force \
+              ${config.modules.pandoc.output}/*
+          '';
+        };
+        pandoc = {
+          enable = true;
+          wantedBy = [ "multi-user.target" ];
+          after = [ "pandoc-clean.service" ];
+          requires = [ "pandoc-clean.service" ];
+          serviceConfig = {
+            User = "pandoc";
+            Group = "pandoc";
+            Type = "oneshot";
+            ExecStart =
+              let
+                inherit (config.modules.pandoc) input output;
+                script = pkgs.writeShellScriptBin "pandoc" ''
+                  ${pkgs.findutils}/bin/find "${input}" -name '*.md' | while read -r md_file; do
+                    relative_path="${"$"}{md_file#${input}/}"
+                    output_file="${output}/${"$"}{relative_path%.md}.html"
 
-                  output_file="${config.modules.pandoc.output}/$\{relative_path%.md}.html"
-                  mkdir -p "$(dirname "$output_file")"
-
-                  pandoc -f markdown -t html "$md_file" -o "$output_file"
-                done
-              '';
-            in
+                    ${pkgs.coreutils}/bin/mkdir -p "$(${pkgs.coreutils}/bin/dirname "$output_file")"
+                    ${pkgs.pandoc}/bin/pandoc -f markdown -t html "$md_file" -o "$output_file"
+                  done
+                '';
+              in
               "${script}/bin/pandoc";
+          };
+        };
+      };
+      timers = {
+        pandoc = {
+          enable = true;
+          wantedBy = [ "multi-user.target" ];
+          timerConfig = {
+            OnActiveSec = "1min";
+            OnUnitActiveSec = "1min";
           };
         };
       };
