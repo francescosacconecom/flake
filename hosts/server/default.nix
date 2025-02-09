@@ -64,6 +64,11 @@ rec {
     pandoc = {
       enable = true;
       input = "${config.modules.git.cloned.output}/website";
+      components = {
+        head = "${config.modules.git.cloned.output}/components/head.html";
+        header = "${config.modules.git.cloned.output}/components/header.html";
+        footer = "${config.modules.git.cloned.output}/components/footer.html";
+      };
     };
     staticWebServer = rec {
       enable = true;
