@@ -47,7 +47,7 @@ rec {
         assets = {
           faviconPng = "${config.modules.git.stagit.output}/logo.png";
           logoPng = "${config.modules.git.stagit.output}/logo.png";
-          styleCss = "${config.modules.git.stagit.output}/style.css";
+          styleCss = ./stagit.css;
         };
       };
     };
