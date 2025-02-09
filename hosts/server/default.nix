@@ -45,9 +45,9 @@ rec {
         enable = true;
         baseUrl = "https://${networking.domain}/git";
         assets = {
-          faviconPng = ./website/logo.png;
-          logoPng = ./website/logo.png;
-          styleCss = ./website/style/git.css;
+          faviconPng = "${config.modules.git.stagit.output}/logo.png";
+          logoPng = "${config.modules.git.stagit.output}/logo.png";
+          styleCss = "${config.modules.git.stagit.output}/style.css";
         };
       };
     };
