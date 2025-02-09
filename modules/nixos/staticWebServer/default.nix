@@ -74,13 +74,14 @@
           script = ''
             ${pkgs.coreutils}/bin/rm \
               --recursive \
+              --force \
               ${config.modules.staticWebServer.directory}/*
           '';
         };
         static-web-server-symlinks = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
-          after = [ "static-web-server-symlinks-clean" ];
+          after = [ "static-web-server-symlinks-clean.service" ];
           serviceConfig = {
             User = "root";
             Group = "root";
