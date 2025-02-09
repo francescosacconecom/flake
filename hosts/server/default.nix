@@ -77,7 +77,7 @@ rec {
         "index.html" = "${config.modules.pandoc.output}/index.html";
         "public/style.css" = "${config.modules.git.clone.output}/website/style.css";
         "public/license" = "${config.modules.git.clone.output}/website/LICENSE";
-        "public/openpgp.asc" = ../../homes/francesco/home/pgp.asc;
+        "public/openpgp.asc" = ../../homes/francesco/home/openpgp.asc;
       };
       acme = {
         enable = true;
