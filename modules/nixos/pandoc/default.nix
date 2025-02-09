@@ -119,8 +119,8 @@
           enable = true;
           wantedBy = [ "multi-user.target" ];
           timerConfig = {
-            OnActiveSec = "1min";
-            OnUnitActiveSec = "1min";
+            OnCalendar = "*:0";
+            Persistent = true;
           };
         };
       };

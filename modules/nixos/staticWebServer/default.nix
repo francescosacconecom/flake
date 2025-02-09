@@ -137,7 +137,7 @@
           enable = true;
           wantedBy = [ "multi-user.target" ];
           timerConfig = {
-            OnCalendar = "*-*-* *:*:00";
+            OnCalendar = "*:0";
             Persistent = true;
           };
         };
