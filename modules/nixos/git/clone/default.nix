@@ -88,7 +88,7 @@
             enable = true;
             wantedBy = [ "multi-user.target" ];
             timerConfig = {
-              OnCalendar = "*:0/15";
+              OnCalendar = "*:0/1";
               Persistent = true;
             };
           };
