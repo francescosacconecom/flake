@@ -73,11 +73,12 @@ rec {
     staticWebServer = rec {
       enable = true;
       symlinks = {
-        git = config.modules.git.stagit.output;
         "index.html" = "${config.modules.pandoc.output}/index.html";
+        "notes" = "${config.modules.pandoc.output}/notes";
         "public/style.css" = "${config.modules.git.clone.output}/website/style.css";
-        "public/license" = "${config.modules.git.clone.output}/website/LICENSE";
-        "public/openpgp.asc" = ../../homes/francesco/home/openpgp.asc;
+        "public/francescosaccone.asc" = ../../homes/francesco/home/openpgp.asc;
+
+        "git" = config.modules.git.stagit.output;
       };
       acme = {
         enable = true;
