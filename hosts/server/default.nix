@@ -75,6 +75,7 @@ rec {
       symlinks = {
         "index.html" = "${config.modules.pandoc.output}/index.html";
         "notes" = "${config.modules.pandoc.output}/notes";
+        "public/icon.png" = "${config.modules.git.clone.output}/website/icon.png";
         "public/style.css" = "${config.modules.git.clone.output}/website/style.css";
         "public/francescosaccone.asc" = ../../homes/francesco/home/openpgp.asc;
 
