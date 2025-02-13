@@ -75,8 +75,8 @@
                 ''
                   ${pkgs.coreutils}/bin/mkdir -p ${clone.output}/${name}
                   ${pkgs.git}/bin/git clone ${url} ${clone.output}/${name} || true
-                  ${pkgs.git}/bin/git -C ${clone.output}/${name} pull origin ${branch}
-                  ${pkgs.git}/bin/git -C ${clone.output}/${name} checkout ${branch}
+                  ${pkgs.git}/bin/git -C ${clone.output}/${name} pull origin ${branch} || true
+                  ${pkgs.git}/bin/git -C ${clone.output}/${name} checkout ${branch} || true
                 ''
               )
               |> builtins.attrValues
