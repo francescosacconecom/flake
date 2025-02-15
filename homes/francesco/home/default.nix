@@ -58,6 +58,7 @@
     monero-gui
     mpv
     musescore
+    nnn
     qjackctl
     rsync
   ];
