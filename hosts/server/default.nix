@@ -44,11 +44,7 @@ rec {
       stagit = {
         enable = true;
         baseUrl = "https://${networking.domain}/git";
-        assets = {
-          faviconPng = "${config.modules.git.stagit.output}/logo.png";
-          logoPng = "${config.modules.git.stagit.output}/logo.png";
-          styleCss = ./stagit.css;
-        };
+        iconPng = "${config.modules.git.clone.output}/website/icon.png";
       };
     };
     openssh.listen = {
