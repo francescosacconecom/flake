@@ -53,13 +53,15 @@
             {
               version = 3;
               path = "${config.modules.tor.servicesDirectory}/${name}";
-              map = ports |> builtins.map (port: {
-                inherit port;
-                target = {
-                  addr = "localhost";
+              map =
+                ports
+                |> builtins.map (port: {
                   inherit port;
-                };
-              });
+                  target = {
+                    addr = "localhost";
+                    inherit port;
+                  };
+                });
             }
           );
       };
