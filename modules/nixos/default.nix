@@ -13,6 +13,7 @@
     ./staticWebServer
     ./sudo
     ./tlp
+    ./tor
     ./wayland
   ];
 }
