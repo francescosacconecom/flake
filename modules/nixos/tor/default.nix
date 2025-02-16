@@ -17,9 +17,9 @@
       type =
         lib.types.submodule {
           options = {
-            port = lib.mkOption {
-              description = "The port to bind the service to.";
-              type = lib.types.uniq lib.types.int;
+            ports = lib.mkOption {
+              description = "The ports to make avaiable.";
+              type = lib.types.listOf lib.types.int;
             };
           };
         }
@@ -49,19 +49,17 @@
           config.modules.tor.services
           |> builtins.mapAttrs (
             name:
-            { port }:
+            { ports }:
             {
               version = 3;
               path = "${config.modules.tor.servicesDirectory}/${name}";
-              map = [
-                {
+              map = ports |> builtins.map (port: {
+                inherit port;
+                target = {
+                  addr = "localhost";
                   inherit port;
-                  target = {
-                    addr = "localhost";
-                    inherit port;
-                  };
-                }
-              ];
+                };
+              });
             }
           );
       };
