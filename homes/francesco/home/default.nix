@@ -58,8 +58,10 @@
     monero-gui
     mpv
     musescore
+    nmap
     nnn
     qjackctl
     rsync
+    tor-browser
   ];
 }
