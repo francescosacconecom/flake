@@ -47,17 +47,23 @@
         role = "relay";
         onionServices =
           config.modules.tor.services
-          |> builtins.mapAttrs (name: { port }: {
-            version = 3;
-            path = "${config.modules.tor.servicesDirectory}/${name}";
-            map = [{
-              inherit port;
-              target = {
-                addr = "localhost";
-                inherit port;
-              };
-            }];
-          });
+          |> builtins.mapAttrs (
+            name:
+            { port }:
+            {
+              version = 3;
+              path = "${config.modules.tor.servicesDirectory}/${name}";
+              map = [
+                {
+                  inherit port;
+                  target = {
+                    addr = "localhost";
+                    inherit port;
+                  };
+                }
+              ];
+            }
+          );
       };
     };
   };
