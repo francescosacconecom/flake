@@ -89,6 +89,17 @@ rec {
         ];
       };
     };
+    tor = {
+      enable = true;
+      services = {
+        website = {
+          ports = [
+            80
+            443
+          ];
+        };
+      };
+    };
   };
 
   networking.domain = "francescosaccone.com";
