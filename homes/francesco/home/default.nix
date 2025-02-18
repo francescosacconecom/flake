@@ -18,7 +18,7 @@
         imapHost = "glacier.mxrouting.net";
         imapTlsPort = 993;
         passwordCommand = ''
-          ${pkgs.coreutils}/bin/cat ${./email.asc} | ${pkgs.gnupg}/bin/gpg --decrypt --recipient ${gpg.primaryKey.fingerprint}
+          ${pkgs.pass}/bin/pass show email
         '';
         realName = "Francesco Saccone";
         smtpHost = "glacier.mxrouting.net";
@@ -36,6 +36,12 @@
       primaryKey = {
         fingerprint = "2BE025D27B449E55B320C44209F39C4E70CB2C24";
         file = ./openpgp.asc;
+      };
+      pass = {
+        enable = true;
+        passwords = {
+          email = ./pass/email.gpg;
+        };
       };
     };
     neovim = {

@@ -6,6 +6,10 @@
   ...
 }:
 {
+  imports = [
+    ./pass
+  ];
+
   options.modules.gpg = {
     enable = lib.mkOption {
       description = "Whether to enable GnuPG.";
@@ -33,6 +37,7 @@
       mutableTrust = false;
       settings = {
         "pinentry-mode" = "loopback";
+        "require-cross-certification" = true;
       };
 
       publicKeys = [
