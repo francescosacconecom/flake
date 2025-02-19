@@ -35,10 +35,6 @@
 
       mutableKeys = false;
       mutableTrust = false;
-      settings = {
-        "pinentry-mode" = "loopback";
-        "require-cross-certification" = true;
-      };
 
       publicKeys = [
         {
@@ -50,11 +46,7 @@
 
     services.gpg-agent = {
       enable = true;
-      enableSshSupport = true;
       pinentryPackage = pkgs.pinentry-tty;
-      extraConfig = ''
-        allow-loopback-pinentry
-      '';
     };
   };
 }
