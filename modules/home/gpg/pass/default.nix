@@ -25,35 +25,37 @@
     };
   };
 
-  config = let
-    inherit (config.modules.gpg) pass;
-  in lib.mkIf (config.modules.gpg.enable && pass.enable) {
-    programs.password-store = {
-      enable = true;
-      package = pkgs.pass;
-      settings = {
-        PASSWORD_STORE_DIR = pass.directory;
-      };
-    };
-
-    home.file =
-      {
-        ".password-store/.gpg-id" = {
-          text = config.modules.gpg.primaryKey.fingerprint;
+  config =
+    let
+      inherit (config.modules.gpg) pass;
+    in
+    lib.mkIf (config.modules.gpg.enable && pass.enable) {
+      programs.password-store = {
+        enable = true;
+        package = pkgs.pass.withExtensions (exts: [ exts.pass-otp ]);
+        settings = {
+          PASSWORD_STORE_DIR = pass.directory;
         };
-      }
-      // (
-        pass.passwords
-        |> builtins.mapAttrs(
-          name: file: {
-            name = ".password-store/${name}.gpg";
-            value = {
-              source = file;
-            };
-          }
-        )
-        |> builtins.attrValues
-        |> builtins.listToAttrs
-      );
-  };
+      };
+
+      home.file =
+        {
+          ".password-store/.gpg-id" = {
+            text = config.modules.gpg.primaryKey.fingerprint;
+          };
+        }
+        // (
+          pass.passwords
+          |> builtins.mapAttrs (
+            name: file: {
+              name = ".password-store/${name}.gpg";
+              value = {
+                source = file;
+              };
+            }
+          )
+          |> builtins.attrValues
+          |> builtins.listToAttrs
+        );
+    };
 }
