@@ -57,5 +57,7 @@
           |> builtins.attrValues
           |> builtins.listToAttrs
         );
+
+      home.packages = [ pkgs.wl-clipboard-rs ];
     };
 }
