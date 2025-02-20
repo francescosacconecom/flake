@@ -47,6 +47,9 @@
     services.gpg-agent = {
       enable = true;
       pinentryPackage = pkgs.pinentry-tty;
+      extraConfig = ''
+        allow-loopback-pinentry
+      '';
     };
   };
 }
