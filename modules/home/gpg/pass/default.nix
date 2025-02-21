@@ -37,6 +37,7 @@
         ]);
         settings = {
           PASSWORD_STORE_DIR = pass.directory;
+          PASSWORD_STORE_CLIP_TIME = "15";
         };
       };
 
