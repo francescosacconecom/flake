@@ -14,7 +14,6 @@
     };
   };
 
-
   networking.firewall = {
     enable = true;
     package = pkgs.iptables;
