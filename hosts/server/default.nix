@@ -52,7 +52,7 @@ rec {
       port = 22;
       authorizedKeyFiles = rec {
         root = [
-          ./ssh/francescoSaccone
+          ./ssh/francescosaccone.pub
         ];
         git = root;
       };
