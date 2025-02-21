@@ -18,7 +18,7 @@
         imapHost = "glacier.mxrouting.net";
         imapTlsPort = 993;
         passwordCommand = ''
-          ${pkgs.pass}/bin/pass show email
+          ${pkgs.pass}/bin/pass show email/francesco/password
         '';
         realName = "Francesco Saccone";
         smtpHost = "glacier.mxrouting.net";
@@ -40,7 +40,7 @@
       pass = {
         enable = true;
         passwords = {
-          email = ./pass/email.gpg;
+          "email/francesco/password" = ./pass/email/francesco/password.gpg;
         };
       };
     };
