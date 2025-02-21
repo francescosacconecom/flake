@@ -39,9 +39,64 @@
       };
       pass = {
         enable = true;
-        passwords = {
-          "email/francesco/password" = ./pass/email/francesco/password.gpg;
-        };
+        passwords =
+          [
+            "email/francesco"
+            "routers/home"
+            "web/gandi"
+            "web/google"
+            "web/infomaniak"
+            "web/microsoft-teams"
+            "web/miur"
+            "web/mxroute"
+            "web/myfitp"
+            "web/nexi"
+            "web/thomann"
+            "wifi/home"
+          ]
+          |> builtins.map (
+            name:
+            let
+              otp = ./pass + "/${name}/otp.gpg";
+              password = ./pass + "/${name}/password.gpg";
+              username = ./pass + "/${name}/username.gpg";
+            in
+            (
+              if builtins.pathExists otp then
+                [
+                  {
+                    name = "${name}/otp";
+                    value = otp;
+                  }
+                ]
+              else
+                [ ]
+            )
+            ++ (
+              if builtins.pathExists password then
+                [
+                  {
+                    name = "${name}/password";
+                    value = password;
+                  }
+                ]
+              else
+                [ ]
+            )
+            ++ (
+              if builtins.pathExists username then
+                [
+                  {
+                    name = "${name}/username";
+                    value = username;
+                  }
+                ]
+              else
+                [ ]
+            )
+          )
+          |> builtins.concatLists
+          |> builtins.listToAttrs;
       };
     };
     neovim = {
