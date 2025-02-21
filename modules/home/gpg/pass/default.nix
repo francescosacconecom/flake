@@ -32,7 +32,9 @@
     lib.mkIf (config.modules.gpg.enable && pass.enable) {
       programs.password-store = {
         enable = true;
-        package = pkgs.pass.withExtensions (exts: [ exts.pass-otp ]);
+        package = pkgs.pass.withExtensions (exts: [
+          exts.pass-otp
+        ]);
         settings = {
           PASSWORD_STORE_DIR = pass.directory;
         };
