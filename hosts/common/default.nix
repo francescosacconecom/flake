@@ -19,6 +19,8 @@
     package = pkgs.iptables;
   };
 
+  environment.defaultPackages = [ ];
+
   nix = {
     settings = {
       auto-optimise-store = true;
