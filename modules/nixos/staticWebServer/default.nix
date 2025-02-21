@@ -60,8 +60,6 @@
             Type = "oneshot";
           };
           script = ''
-            ${pkgs.findutils}/bin/find ${config.modules.staticWebServer.directory} \
-              -mindepth 1 -not -name '.well-known' -exec ${pkgs.coreutils}/bin/rm -Rf {} +
             ${pkgs.coreutils}/bin/chmod -R g+rwx ${config.modules.staticWebServer.directory}
           '';
         };
