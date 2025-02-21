@@ -48,5 +48,9 @@
       enable = true;
       pinentryPackage = pkgs.pinentry-tty;
     };
+
+    programs.bash.initExtra = ''
+      export GPG_TTY=$(${pkgs.coreutils}/bin/tty)
+    '';
   };
 }
