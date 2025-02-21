@@ -113,16 +113,15 @@
   home.packages = with pkgs; [
     ardour
     helvum
-    keepassxc
     libreoffice
     imv
     monero-gui
     mpv
+    mupdf
     musescore
     nmap
     nnn
     qjackctl
-    rsync
     tor-browser
   ];
 }
