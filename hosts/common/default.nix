@@ -8,8 +8,12 @@
 
   users = {
     mutableUsers = false;
-    users."root".hashedPassword = "!";
+    defaultUserShell = "${pkgs.bashInteractive}/bin/bash";
+    users.root = {
+      hashedPassword = "!";
+    };
   };
+
 
   networking.firewall = {
     enable = true;
