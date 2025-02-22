@@ -9,7 +9,7 @@
     ./aerc
     ./git
     ./gpg
-    ./neovim
     ./sway
+    ./vim
   ];
 }

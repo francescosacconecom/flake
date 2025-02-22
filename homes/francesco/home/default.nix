@@ -99,14 +99,14 @@
           |> builtins.listToAttrs;
       };
     };
-    neovim = {
-      enable = true;
-    };
     sway = {
       enable = true;
       fonts = {
         monospace = "IBM Plex Mono";
       };
+    };
+    vim = {
+      enable = true;
     };
   };
 
