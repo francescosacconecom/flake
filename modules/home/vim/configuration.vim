@@ -1,4 +1,4 @@
-  " Table of contents:
+" Table of contents:
 "   1. General
 "   2. Interface
 "   3. Appearence
