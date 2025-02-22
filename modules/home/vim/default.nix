@@ -15,24 +15,22 @@
   };
 
   config = lib.mkIf config.modules.vim.enable {
-    programs.vim = {
-      enable = true;
-      packageConfigurable = pkgs.vim;
-
-      defaultEditor = true;
-
-      plugins = with pkgs.vimPlugins; [
-        nerdtree
-        editorconfig-vim
+    home = {
+      packages = [
+        pkgs.vim
       ];
-
-      extraConfig =
-        [
-          ./colorscheme.vim
-          ./configuration.vim
-        ]
-        |> builtins.map builtins.readFile
-        |> builtins.concatStringsSep "\n";
+      sessionVariables = {
+        EDITOR = "${pkgs.vim}/bin/vim";
+      };
+      file = {
+        ".vimrc".text =
+          [
+            ./colorscheme.vim
+            ./configuration.vim
+          ]
+          |> builtins.map builtins.readFile
+          |> builtins.concatStringsSep "\n";
+      };
     };
   };
 }
