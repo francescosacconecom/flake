@@ -8,7 +8,7 @@
 
   users = {
     mutableUsers = false;
-    defaultUserShell = "${pkgs.bashInteractive}/bin/bash";
+    defaultUserShell = "${pkgs.yash}/bin/yash";
     users.root = {
       hashedPassword = "!";
     };

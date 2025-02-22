@@ -3,7 +3,8 @@
   ...
 }:
 {
-  programs.bash = {
-    enable = true;
+  home.file = {
+    ".yashrc".text = "";
+    ".yash_profile".text = "";
   };
 }
