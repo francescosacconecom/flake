@@ -101,6 +101,9 @@
     };
     sway = {
       enable = true;
+      bar = {
+        enable = true;
+      };
       fonts = {
         monospace = "IBM Plex Mono";
       };

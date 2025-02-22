@@ -6,15 +6,63 @@
   ...
 }:
 {
-  options.modules.sway.components.i3status = {
+  options.modules.sway.bar = {
     enable = lib.mkOption {
-      description = "Whether to enable i3status.";
-      default = true;
+      description = "Whether to enable Swaybar.";
+      default = false;
       type = lib.types.bool;
     };
   };
 
-  config = lib.mkIf config.modules.sway.components.i3status.enable {
+  config = lib.mkIf config.modules.sway.bar.enable {
+    wayland.windowManager.sway.config.bars = [
+      {
+        command = "${pkgs.sway}/bin/swaybar";
+
+        position = "bottom";
+
+        statusCommand = "${pkgs.i3status}/bin/i3status";
+        mode = "dock";
+        trayOutput = "none";
+        workspaceButtons = true;
+        extraConfig = "separator_symbol \"|\"";
+
+        fonts = {
+          names = [
+            config.modules.sway.fonts.monospace
+          ];
+          style = "Regular";
+          size = 12.0;
+        };
+
+        colors = {
+          activeWorkspace = {
+            background = "#000000";
+            border = "#ffffff";
+            text = "#ffffff";
+          };
+          background = "#000000";
+          focusedWorkspace = {
+            background = "#ffffff";
+            border = "#ffffff";
+            text = "#000000";
+          };
+          inactiveWorkspace = {
+            background = "#000000";
+            border = "#000000";
+            text = "#ffffff";
+          };
+          separator = "#ffffff";
+          statusline = "#ffffff";
+          urgentWorkspace = {
+            background = "#000000";
+            border = "#da8b8b";
+            text = "#ffffff";
+          };
+        };
+      }
+    ];
+
     programs.i3status = {
       enable = true;
       package = pkgs.i3status;

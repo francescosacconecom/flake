@@ -7,8 +7,8 @@
 }:
 {
   imports = [
+    ./bar
     ./components/alacritty
-    ./components/i3status
   ];
 
   options.modules.sway = {
@@ -43,58 +43,6 @@
 
         modifier = "Mod4";
         floating.modifier = "Mod4";
-
-        bars =
-          if config.modules.sway.components.i3status.enable then
-            [
-              {
-                command = "${pkgs.sway}/bin/swaybar";
-
-                position = "bottom";
-
-                statusCommand = "${pkgs.i3status}/bin/i3status";
-                mode = "dock";
-                trayOutput = "none";
-                workspaceButtons = true;
-                extraConfig = "separator_symbol \"|\"";
-
-                fonts = {
-                  names = [
-                    config.modules.sway.fonts.monospace
-                  ];
-                  style = "Regular";
-                  size = 12.0;
-                };
-
-                colors = {
-                  activeWorkspace = {
-                    background = "#000000";
-                    border = "#ffffff";
-                    text = "#ffffff";
-                  };
-                  background = "#000000";
-                  focusedWorkspace = {
-                    background = "#ffffff";
-                    border = "#ffffff";
-                    text = "#000000";
-                  };
-                  inactiveWorkspace = {
-                    background = "#000000";
-                    border = "#000000";
-                    text = "#ffffff";
-                  };
-                  separator = "#ffffff";
-                  statusline = "#ffffff";
-                  urgentWorkspace = {
-                    background = "#000000";
-                    border = "#da8b8b";
-                    text = "#ffffff";
-                  };
-                };
-              }
-            ]
-          else
-            [ ];
 
         colors = {
           background = "#ffffff";
