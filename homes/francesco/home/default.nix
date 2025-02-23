@@ -118,7 +118,6 @@
     helvum
     libreoffice
     imv
-    monero-gui
     mpv
     mupdf
     musescore
