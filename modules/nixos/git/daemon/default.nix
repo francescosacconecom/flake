@@ -30,20 +30,17 @@
                 script = pkgs.writeShellScriptBin "script" ''
                   ${pkgs.git}/bin/git daemon \
                     --verbose \
+                    --syslog \
                     --base-path=${config.modules.git.directory} \
-                    --reuseaddr \
-                    --listen=localhost \
                     --port=9418 \
-                    --user=git \
-                    --group=git \
                     --export-all \
                     ${config.modules.git.directory}
                 '';
               in
               {
-                Restart = "on-failure";
-                User = "root";
-                Group = "root";
+                User = "git";
+                Group = "git";
+                Type = "simple";
                 ExecStart = "${script}/bin/script";
               };
           };
