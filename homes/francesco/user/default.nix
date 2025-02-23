@@ -16,7 +16,7 @@
     ];
     createHome = true;
     home = "/home/francesco";
-    shell = "${pkg.bashInteractive}/bin/bash";
+    shell = "${pkgs.bashInteractive}/bin/bash";
   };
 
   fonts.packages = with pkgs; [
