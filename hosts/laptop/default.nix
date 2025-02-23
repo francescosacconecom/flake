@@ -9,13 +9,6 @@
     chromium = {
       enable = true;
     };
-    monerod = {
-      enable = true;
-      mining = {
-        enable = true;
-        address = "44UAWDBRoxtXodXboy6LKEjokehoSiHwmNhgSYEvqzbiTmUnvMcNccFNsaAp7GCbDKhu62oeiEuj9HsPtwJi1p9V26ShoDh";
-      };
-    };
     wayland = {
       enable = true;
     };

@@ -4,7 +4,6 @@
     ./bind
     ./chromium
     ./git
-    ./monerod
     ./networkmanager
     ./openssh
     ./pandoc
