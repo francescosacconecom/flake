@@ -5,11 +5,20 @@
 {
   projectRootFile = "flake.nix";
 
-  programs.nixfmt = {
-    enable = true;
-    package = pkgs.nixfmt-rfc-style;
+  programs = {
+    nixfmt.enable = true;
+    prettier.enable = true;
   };
-  settings.formatter.nixfmt.includes = [
-    "*.nix"
-  ];
+
+  settings = {
+    global.excludes = [
+      ".editorconfig"
+      "README"
+      "LICENSE"
+      "*.asc"
+      "*.gpg"
+      "*.pub"
+      "*.vim"
+    ];
+  };
 }
