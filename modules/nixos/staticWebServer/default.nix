@@ -51,9 +51,6 @@
         static-web-server-directory = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
-          before = lib.mkIf config.modules.staticWebServer.acme.enable [
-            "acme-${config.modules.staticWebServer.acme.domain}.service"
-          ];
           serviceConfig = {
             User = "root";
             Group = "root";

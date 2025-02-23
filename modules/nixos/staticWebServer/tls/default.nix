@@ -38,8 +38,17 @@
           wantedBy = [ "multi-user.target" ];
           after = [
             "static-web-server.service"
-          ] ++ (if config.modules.staticWebServer.acme.enable then [ "certbot.service" ] else [ ]);
+            "acme.service"
+          ];
+          serviceConfig = {
+            User = "root";
+            Group = "root";
+          };
           script = ''
+            ${pkgs.coreutils}/bin/cat \
+            ${builtins.concatStringsSep " " config.modules.staticWebServer.tls.pemFiles} \
+              > /var/lib/hitch/full.pem
+
             ${pkgs.hitch}/bin/hitch \
               --backend [localhost]:80 \
               --frontend [*]:443 \
@@ -48,7 +57,7 @@
               --ocsp-dir /var/lib/hitch \
               --user hitch \
               --group www \
-              ${builtins.concatStringsSep " " config.modules.staticWebServer.tls.pemFiles}
+              /var/lib/hitch/full.pem
           '';
         };
 

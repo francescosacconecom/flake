@@ -85,7 +85,8 @@ rec {
       tls = {
         enable = true;
         pemFiles = [
-          (config.security.acme.certs.${acme.domain}.directory + "/full.pem")
+          "${config.modules.staticWebServer.acme.directory}/${acme.domain}/fullchain.pem"
+          "${config.modules.staticWebServer.acme.directory}/${acme.domain}/privkey.pem"
         ];
       };
     };
