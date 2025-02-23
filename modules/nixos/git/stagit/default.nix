@@ -92,12 +92,13 @@
               };
           };
         };
-        paths = {
+        timers = {
           stagit = {
             enable = true;
             wantedBy = [ "multi-user.target" ];
-            pathConfig = {
-              PathModified = config.modules.git.directory;
+            timerConfig = {
+              OnCalendar = "*:0/1";
+              Persistent = true;
             };
           };
         };
