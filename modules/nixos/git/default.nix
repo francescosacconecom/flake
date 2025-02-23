@@ -56,6 +56,7 @@
           group = "git";
           createHome = true;
           home = config.modules.git.directory;
+          shell = "${pkgs.git}/bin/git-shell";
         };
       };
       groups = {
