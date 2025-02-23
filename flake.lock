@@ -93,11 +93,11 @@
         "rev": "0d25745f33e0c5a8d49b4e22fde751a3cfa67980",
         "revCount": 13,
         "type": "git",
-        "url": "file:///home/francesco/Git/website"
+        "url": "git://francescosaccone.com/website"
       },
       "original": {
         "type": "git",
-        "url": "file:///home/francesco/Git/website"
+        "url": "git://francescosaccone.com/website"
       }
     }
   },
