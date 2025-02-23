@@ -60,7 +60,8 @@
         "disko": "disko",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
-        "treefmt-nix": "treefmt-nix"
+        "treefmt-nix": "treefmt-nix",
+        "website": "website"
       }
     },
     "treefmt-nix": {
@@ -81,6 +82,22 @@
         "owner": "numtide",
         "repo": "treefmt-nix",
         "type": "github"
+      }
+    },
+    "website": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1740033973,
+        "narHash": "sha256-icqTNv9NfE39+zuKcpCGYHt5cz7J51wC5zQLkooouOc=",
+        "ref": "refs/heads/master",
+        "rev": "0d25745f33e0c5a8d49b4e22fde751a3cfa67980",
+        "revCount": 13,
+        "type": "git",
+        "url": "file:///home/francesco/Git/website"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:///home/francesco/Git/website"
       }
     }
   },

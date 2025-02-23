@@ -19,6 +19,10 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    website = {
+      url = "git+git://francescosaccone.com/website";
+      flake = false;
+    };
   };
 
   outputs =
