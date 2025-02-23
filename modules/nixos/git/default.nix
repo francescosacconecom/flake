@@ -7,7 +7,6 @@
 }:
 {
   imports = [
-    ./clone
     ./daemon
     ./stagit
   ];
@@ -57,7 +56,6 @@
           group = "git";
           createHome = true;
           home = config.modules.git.directory;
-          shell = "${pkgs.git}/bin/git-shell";
         };
       };
       groups = {
@@ -72,47 +70,37 @@
 
     systemd = {
       services = {
-        git-permissions = {
+        git-repositories = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
-          serviceConfig = {
-            User = "git";
-            Group = "git";
-            Type = "oneshot";
-          };
-          script = ''
-            ${pkgs.coreutils}/bin/chmod -R g+r ${config.modules.git.directory}
-          '';
-        };
-        git = {
-          enable = true;
-          wantedBy = [ "multi-user.target" ];
-          requires = [ "git-permissions.service" ];
-          before = [ "git-permissions.service" ];
-          serviceConfig = {
-            User = "git";
-            Group = "git";
-            Type = "oneshot";
-          };
-          script =
-            config.modules.git.repositories
-            |> builtins.mapAttrs (
-              name:
-              {
-                description,
-                owner,
-                baseUrl,
-              }:
-              ''
-                ${pkgs.git}/bin/git init -q --bare -b master ${config.modules.git.directory}/${name}
+          serviceConfig =
+            let
+              script =
+                config.modules.git.repositories
+                |> builtins.mapAttrs (
+                  name:
+                  {
+                    description,
+                    owner,
+                    baseUrl,
+                  }:
+                  ''
+                    ${pkgs.git}/bin/git init -q --bare -b master ${config.modules.git.directory}/${name}
 
-                ${pkgs.coreutils}/bin/echo "${description}" > ${config.modules.git.directory}/${name}/description
-                ${pkgs.coreutils}/bin/echo "${owner}" > ${config.modules.git.directory}/${name}/owner
-                ${pkgs.coreutils}/bin/echo "git://${baseUrl}/${name}" > ${config.modules.git.directory}/${name}/url
-              ''
-            )
-            |> builtins.attrValues
-            |> builtins.concatStringsSep "\n";
+                    ${pkgs.coreutils}/bin/echo "${description}" > ${config.modules.git.directory}/${name}/description
+                    ${pkgs.coreutils}/bin/echo "${owner}" > ${config.modules.git.directory}/${name}/owner
+                    ${pkgs.coreutils}/bin/echo "git://${baseUrl}/${name}" > ${config.modules.git.directory}/${name}/url
+                  ''
+                )
+                |> builtins.attrValues
+                |> builtins.concatStringsSep "\n";
+            in
+            {
+              User = "git";
+              Group = "git";
+              Type = "oneshot";
+              ExecStart = "${script}/bin/script";
+            };
         };
       };
     };

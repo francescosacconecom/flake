@@ -48,96 +48,81 @@
 
     systemd = {
       services = {
-        static-web-server-directory = {
+        static-web-server-setup = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
-          serviceConfig = {
-            User = "root";
-            Group = "root";
-            Type = "oneshot";
-          };
-          script = ''
-            ${pkgs.coreutils}/bin/chmod -R g+rwx ${config.modules.staticWebServer.directory}
-          '';
-        };
-        static-web-server-symlinks = {
-          enable = true;
-          wantedBy = [ "multi-user.target" ];
-          requires = [ "static-web-server-directory.service" ];
-          after = [ "static-web-server-directory.service" ];
-          serviceConfig = {
-            User = "root";
-            Group = "root";
-            Type = "oneshot";
-          };
-          script =
-            config.modules.staticWebServer.symlinks
-            |> builtins.mapAttrs (
-              name: target: ''
-                ${pkgs.coreutils}/bin/mkdir -p ${config.modules.staticWebServer.directory}/${builtins.dirOf name}
-                ${pkgs.coreutils}/bin/ln -sf ${target} ${config.modules.staticWebServer.directory}/${name}
-                ${pkgs.coreutils}/bin/chown -Rh static-web-server:www ${config.modules.staticWebServer.directory}
-              ''
-            )
-            |> builtins.attrValues
-            |> builtins.concatStringsSep "\n";
+          serviceConfig =
+            let
+              permissions = pkgs.writeShellScriptBin "permissions" ''
+                ${pkgs.coreutils}/bin/chmod -R g+rwx ${config.modules.staticWebServer.directory}
+              '';
+              clean = pkgs.writeShellScriptBin "clean" ''
+                ${pkgs.coreutils}/bin/rm -rf ${config.modules.staticWebServer.directory}/*
+              '';
+              symlinks =
+                config.modules.staticWebServer.symlinks
+                |> builtins.mapAttrs (
+                  name: target: ''
+                    ${pkgs.coreutils}/bin/mkdir -p ${config.modules.staticWebServer.directory}/${builtins.dirOf name}
+                    ${pkgs.coreutils}/bin/ln -sf ${target} ${config.modules.staticWebServer.directory}/${name}
+
+                    ${pkgs.coreutils}/bin/chown -Rh static-web-server:www ${config.modules.staticWebServer.directory}/${name}
+                  ''
+                )
+                |> builtins.attrValues
+                |> builtins.concatStringsSep "\n"
+                |> pkgs.writeShellScriptBin "symlinks";
+            in
+            {
+              User = "root";
+              Group = "root";
+              Type = "oneshot";
+              ExecStart = [
+                "${permissions}/bin/permissions"
+                "${clean}/bin/clean"
+                "${symlinks}/bin/symlinks"
+              ];
+            };
         };
         static-web-server = rec {
           enable = true;
           wantedBy = [ "multi-user.target" ];
-          requires =
-            [
-              "static-web-server-symlinks.service"
-            ]
-            ++ (
-              if config.modules.staticWebServer.tls.enable then
-                [
-                  "hitch.service"
-                ]
-              else
-                [ ]
-            );
-          after = [ "network.target" ];
-          serviceConfig = {
-            User = "root";
-            Group = "root";
-          };
-          script = ''
-            ${pkgs.static-web-server}/bin/static-web-server \
-              --port 80 \
-              --http2 false \
-              --root ${config.modules.staticWebServer.directory} \
-              --index-files index.html \
-              --ignore-hidden-files false \
-              ${if config.modules.staticWebServer.tls.enable then "--https-redirect" else ";"}
-          '';
-        };
-        static-web-server-restarter = {
-          enable = true;
-          wantedBy = [ "multi-user.target" ];
-          after = [ "network.target" ];
-          serviceConfig = {
-            Type = "oneshot";
-          };
-          script = "${pkgs.systemdMinimal}/bin/systemctl restart static-web-server.service";
+          requires = [
+            "static-web-server-setup.service"
+          ];
+          after = [
+            "static-web-server-setup.service"
+            "network.target"
+          ];
+          serviceConfig =
+            let
+              script = pkgs.writeShellScriptBin "script" ''
+                ${pkgs.static-web-server}/bin/static-web-server \
+                  --port 80 \
+                  --http2 false \
+                  --root ${config.modules.staticWebServer.directory} \
+                  --index-files index.html \
+                  --ignore-hidden-files false \
+                  ${if config.modules.staticWebServer.tls.enable then "--https-redirect" else ";"}
+              '';
+            in
+            {
+              User = "root";
+              Group = "root";
+              Restart = "on-failure";
+              Type = "simple";
+              ExecStart = "${script}/bin/script";
+            };
         };
       };
       paths = {
-        static-web-server-restarter = {
+        static-web-server = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
           pathConfig = {
-            pathModified = config.modules.staticWebServer.directory;
-          };
-        };
-      };
-      timers = {
-        static-web-server-restarter = {
-          enable = true;
-          wantedBy = [ "multi-user.target" ];
-          timerConfig = {
-            OnCalendar = "*:0/1";
-            Persistent = true;
+            PathModified = [
+              config.modules.staticWebServer.directory
+            ] ++ builtins.attrValues config.modules.staticWebServer.symlinks;
           };
         };
       };

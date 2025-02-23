@@ -14,7 +14,7 @@
     };
     output = lib.mkOption {
       description = "The directory where generated HTML files will reside.";
-      default = "/opt/stagit";
+      default = "/srv/git/.stagit";
       readOnly = true;
       type = lib.types.uniq lib.types.path;
     };
@@ -36,91 +36,68 @@
     lib.mkIf (config.modules.git.enable && stagit.enable) {
       systemd = {
         services = {
-          stagit-directory = {
-            enable = true;
-            wantedBy = [ "multi-user.target" ];
-            serviceConfig = {
-              User = "root";
-              Group = "root";
-              Type = "oneshot";
-            };
-            script = ''
-              ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}
-              ${pkgs.coreutils}/bin/rm -Rf ${stagit.output}/*
-              ${pkgs.coreutils}/bin/chown -R git:git ${stagit.output}
-            '';
-          };
           stagit = {
             enable = true;
             wantedBy = [ "multi-user.target" ];
-            after = [
-              "git-permissions.service"
-              "stagit-directory.service"
-            ];
-            requires = [
-              "git-permissions.service"
-              "stagit-directory.service"
-            ];
-            serviceConfig = {
-              User = "git";
-              Group = "git";
-              Type = "oneshot";
-            };
-            script =
+            serviceConfig =
               let
-                ln = target: name: "${pkgs.coreutils}/bin/ln -sf ${target} ${name}";
+                stagit-repositories =
+                  config.modules.git.repositories
+                  |> builtins.attrNames
+                  |> builtins.map (name: ''
+                    ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}/${name}
+                    cd ${stagit.output}/${name}
+                    ${pkgs.stagit}/bin/stagit -u ${stagit.baseUrl}/ ${config.modules.git.directory}/${name}
+                  '')
+                  |> builtins.concatStringsSep "\n"
+                  |> pkgs.writeShellScriptBin "stagit-repositories";
+                stagit-index = pkgs.writeShellScriptBin "stagit-index" ''
+                  ${pkgs.stagit}/bin/stagit-index ${
+                    (
+                      config.modules.git.repositories
+                      |> builtins.attrNames
+                      |> builtins.map (name: "${config.modules.git.directory}/${name}")
+                      |> builtins.concatStringsSep " "
+                    )
+                  } > ${stagit.output}/index.html
+                '';
+                assets-repositories =
+                  config.modules.git.repositories
+                  |> builtins.attrNames
+                  |> builtins.map (name: ''
+                    ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}/${name}
+
+                    ${pkgs.coreutils}/bin/ln -sf ${stagit.iconPng} ${stagit.output}/${name}/favicon.png
+                    ${pkgs.coreutils}/bin/ln -sf ${stagit.iconPng} ${stagit.output}/${name}/logo.png
+                    ${pkgs.coreutils}/bin/ln -sf ${./style.css} ${stagit.output}/${name}/style.css
+                  '')
+                  |> builtins.concatStringsSep "\n"
+                  |> pkgs.writeShellScriptBin "assets-repositories";
+                assets-index = pkgs.writeShellScriptBin "assets-index" ''
+                  ${pkgs.coreutils}/bin/ln -sf ${stagit.iconPng} ${stagit.output}/favicon.png
+                  ${pkgs.coreutils}/bin/ln -sf ${stagit.iconPng} ${stagit.output}/logo.png
+                  ${pkgs.coreutils}/bin/ln -sf ${./style.css} ${stagit.output}/style.css
+                '';
               in
-              ''
-                ${
-                  (
-                    config.modules.git.repositories
-                    |> builtins.attrNames
-                    |> builtins.map (name: ''
-                      ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}/${name}
-                      cd ${stagit.output}/${name}
-                      ${pkgs.stagit}/bin/stagit -u ${stagit.baseUrl}/ ${config.modules.git.directory}/${name}
-                    '')
-                    |> builtins.concatStringsSep "\n"
-                  )
-                }
-
-                ${pkgs.stagit}/bin/stagit-index ${
-                  (
-                    config.modules.git.repositories
-                    |> builtins.attrNames
-                    |> builtins.map (name: "${config.modules.git.directory}/${name}")
-                    |> builtins.concatStringsSep " "
-                  )
-                } > ${stagit.output}/index.html
-
-                ${ln stagit.iconPng "${stagit.output}/favicon.png"}
-                ${ln stagit.iconPng "${stagit.output}/logo.png"}
-                ${ln ./style.css "${stagit.output}/style.css"}
-
-                ${
-                  (
-                    config.modules.git.repositories
-                    |> builtins.attrNames
-                    |> builtins.map (name: ''
-                      ${pkgs.coreutils}/bin/mkdir -p ${stagit.output}/${name}
-
-                      ${ln stagit.iconPng "${stagit.output}/${name}/favicon.png"}
-                      ${ln stagit.iconPng "${stagit.output}/${name}/logo.png"}
-                      ${ln ./style.css "${stagit.output}/${name}/style.css"}
-                    '')
-                    |> builtins.concatStringsSep "\n"
-                  )
-                }
-              '';
+              {
+                User = "git";
+                Group = "git";
+                Type = "oneshot";
+                ExecStart = [
+                  "${stagit-repositories}/bin/stagit-repositories"
+                  "${stagit-index}/bin/stagit-index"
+                  "${assets-repositories}/bin/assets-repositories"
+                  "${assets-index}/bin/assets-index"
+                ];
+              };
           };
         };
-        timers = {
+        paths = {
           stagit = {
             enable = true;
             wantedBy = [ "multi-user.target" ];
-            timerConfig = {
-              OnCalendar = "*:0/1";
-              Persistent = true;
+            pathConfig = {
+              PathModified = config.modules.git.directory;
             };
           };
         };

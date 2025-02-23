@@ -43,7 +43,7 @@
           acme = {
             enable = true;
             wantedBy = [ "multi-user.target" ];
-            after = [ "static-web-server-directory.service" ];
+            after = [ "static-web-server-setup.service" ];
             serviceConfig =
               let
                 script = pkgs.writeShellScriptBin "script" ''

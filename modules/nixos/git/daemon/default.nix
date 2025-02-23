@@ -25,30 +25,27 @@
             enable = true;
             wantedBy = [ "multi-user.target" ];
             after = [ "network.target" ];
-            serviceConfig = {
-              Restart = "always";
-              RestartSec = "500ms";
-              User = "git";
-              Group = "git";
-            };
-            script = ''
-              ${pkgs.git}/bin/git daemon \
-                --verbose \
-                --base-path=${config.modules.git.directory}
-                --reuseaddr \
-                --timeout=1 \
-                --max-connections=0 \
-                --listen=localhost \
-                --port=9418 \
-                --export-all ${
-                  (
-                    config.modules.git.repositories
-                    |> builtins.attrNames
-                    |> builtins.map (name: "${config.modules.git.directory}/${name}")
-                    |> builtins.concatStringsSep " "
-                  )
-                }
-            '';
+            serviceConfig =
+              let
+                script = pkgs.writeShellScriptBin "script" ''
+                  ${pkgs.git}/bin/git daemon \
+                    --verbose \
+                    --base-path=${config.modules.git.directory} \
+                    --reuseaddr \
+                    --listen=localhost \
+                    --port=9418 \
+                    --user=git \
+                    --group=git \
+                    --export-all \
+                    ${config.modules.git.directory}
+                '';
+              in
+              {
+                Restart = "on-failure";
+                User = "root";
+                Group = "root";
+                ExecStart = "${script}/bin/script";
+              };
           };
         };
       };

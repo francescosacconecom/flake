@@ -29,22 +29,13 @@ rec {
           baseUrl = networking.domain;
         };
       };
-      clone = {
-        enable = true;
-        repositories = {
-          website = {
-            url = "${config.modules.git.directory}/website";
-            branch = "master";
-          };
-        };
-      };
       daemon = {
         enable = true;
       };
       stagit = {
         enable = true;
         baseUrl = "https://${networking.domain}/git";
-        iconPng = "${config.modules.git.clone.output}/website/icon.png";
+        iconPng = "${inputs.website}/icon.png";
       };
     };
     openssh.listen = {
@@ -59,11 +50,11 @@ rec {
     };
     pandoc = {
       enable = true;
-      input = "${config.modules.git.clone.output}/website";
+      input = inputs.website;
       components = {
-        head = "${config.modules.git.clone.output}/website/components/head.html";
-        header = "${config.modules.git.clone.output}/website/components/header.html";
-        footer = "${config.modules.git.clone.output}/website/components/footer.html";
+        head = "${inputs.website}/components/head.html";
+        header = "${inputs.website}/components/header.html";
+        footer = "${inputs.website}/components/footer.html";
       };
     };
     staticWebServer = rec {
@@ -71,8 +62,8 @@ rec {
       symlinks = {
         "index.html" = "${config.modules.pandoc.output}/index.html";
         "notes" = "${config.modules.pandoc.output}/notes";
-        "public/icon.png" = "${config.modules.git.clone.output}/website/icon.png";
-        "public/style.css" = "${config.modules.git.clone.output}/website/style.css";
+        "public/icon.png" = "${inputs.website}/icon.png";
+        "public/style.css" = "${inputs.website}/style.css";
         "public/francescosaccone.asc" = ../../homes/francesco/home/openpgp.asc;
 
         "git" = config.modules.git.stagit.output;

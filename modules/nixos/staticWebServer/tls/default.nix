@@ -31,34 +31,42 @@
               home = "/var/lib/hitch";
             };
           };
+          groups = {
+            hitch = { };
+          };
         };
 
         systemd.services.hitch = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
           after = [
-            "static-web-server.service"
             "acme.service"
           ];
-          serviceConfig = {
-            User = "root";
-            Group = "root";
-          };
-          script = ''
-            ${pkgs.coreutils}/bin/cat \
-            ${builtins.concatStringsSep " " config.modules.staticWebServer.tls.pemFiles} \
-              > /var/lib/hitch/full.pem
+          serviceConfig =
+            let
+              script = pkgs.writeShellScriptBin "script" ''
+                ${pkgs.coreutils}/bin/cat \
+                ${builtins.concatStringsSep " " config.modules.staticWebServer.tls.pemFiles} \
+                  > /var/lib/hitch/full.pem
 
-            ${pkgs.hitch}/bin/hitch \
-              --backend [localhost]:80 \
-              --frontend [*]:443 \
-              --backend-connect-timeout 30 \
-              --ssl-handshake-timeout 30 \
-              --ocsp-dir /var/lib/hitch \
-              --user hitch \
-              --group www \
-              /var/lib/hitch/full.pem
-          '';
+                ${pkgs.hitch}/bin/hitch \
+                  --backend [localhost]:80 \
+                  --frontend [*]:443 \
+                  --backend-connect-timeout 30 \
+                  --ssl-handshake-timeout 30 \
+                  --ocsp-dir /var/lib/hitch \
+                  --user hitch \
+                  --group hitch \
+                  /var/lib/hitch/full.pem
+              '';
+            in
+            {
+              User = "root";
+              Group = "root";
+              Type = "simple";
+              Restart = "on-failure";
+              ExecStart = "${script}/bin/script";
+            };
         };
 
         networking.firewall.allowedTCPPorts = [ 443 ];
