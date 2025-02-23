@@ -81,6 +81,9 @@ rec {
         enable = true;
         email = "admin@${networking.domain}";
         inherit (networking) domain;
+        extraDomains = builtins.map (sub: "${sub}.${networking.domain}") [
+          "www"
+        ];
       };
       tls = {
         enable = true;

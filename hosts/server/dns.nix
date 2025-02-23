@@ -1,5 +1,10 @@
 domain:
 let
+  webServer = {
+    ipv4 = "193.108.52.52";
+    ipv6 = "2001:1600:13:101::16e3";
+  };
+
   ttl = 3600;
 in
 [
@@ -29,35 +34,42 @@ in
     inherit ttl;
     class = "IN";
     type = "A";
-    data = "193.108.52.52";
+    data = webServer.ipv4;
   }
   {
     name = "ns1";
     inherit ttl;
     class = "IN";
     type = "AAAA";
-    data = "2001:1600:13:101::16e3";
+    data = webServer.ipv6;
   }
   {
     name = "@";
     inherit ttl;
     class = "IN";
     type = "A";
-    data = "193.108.52.52";
+    data = webServer.ipv4;
   }
   {
     name = "@";
     inherit ttl;
     class = "IN";
     type = "AAAA";
-    data = "2001:1600:13:101::16e3";
+    data = webServer.ipv6;
   }
   {
     name = "www";
     inherit ttl;
     class = "IN";
-    type = "CNAME";
-    data = domain;
+    type = "A";
+    data = webServer.ipv4;
+  }
+  {
+    name = "www";
+    inherit ttl;
+    class = "IN";
+    type = "AAAA";
+    data = webServer.ipv6;
   }
   {
     name = "@";
