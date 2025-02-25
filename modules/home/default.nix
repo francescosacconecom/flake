@@ -9,6 +9,7 @@
     ./aerc
     ./git
     ./gpg
+    ./newsraft
     ./sway
     ./vim
   ];
