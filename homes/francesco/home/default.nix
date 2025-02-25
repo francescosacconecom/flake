@@ -99,6 +99,21 @@
           |> builtins.listToAttrs;
       };
     };
+    newsraft = {
+      enable = true;
+      feeds = {
+        "World" = [
+          {
+            name = "The Washington Post World";
+            url = "https://feeds.washingtonpost.com/rss/world";
+          }
+          {
+            name = "CNN International";
+            url = "http://rss.cnn.com/rss/edition.rss";
+          }
+        ];
+      };
+    };
     sway = {
       enable = true;
       bar = {
