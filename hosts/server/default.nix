@@ -61,12 +61,11 @@ rec {
       enable = true;
       symlinks = {
         "index.html" = "${config.modules.pandoc.output}/index.html";
-        "notes" = "${config.modules.pandoc.output}/notes";
-        "public/icon.png" = "${inputs.website}/icon.png";
-        "public/style.css" = "${inputs.website}/style.css";
-        "public/francescosaccone.asc" = ../../homes/francesco/home/openpgp.asc;
-
         "git" = config.modules.git.stagit.output;
+        "notes" = "${config.modules.pandoc.output}/notes";
+        "public" = "${inputs.website}/public";
+        "public/francescosaccone.asc" = ../../homes/francesco/home/openpgp.asc;
+        "robots.txt" = "${inputs.website}/robots.txt";
       };
       acme = {
         enable = true;
