@@ -17,6 +17,7 @@
     };
     networkmanager = {
       enable = true;
+      randomiseMacAddress = true;
     };
     openssh.agent = {
       enable = true;
