@@ -28,7 +28,18 @@
     wayland.windowManager.sway =
       let
         commands = {
-          st = "${pkgs.st}/bin/st -f \"${config.modules.sway.fonts.monospace}\"";
+          foot =
+            let
+              configFile = pkgs.writeText "foot.ini" ''
+                [colors]
+                background=000000
+                foreground=ffffff
+
+                [main]
+                font=${config.modules.sway.fonts.monospace}:size=11
+              '';
+            in
+            "${pkgs.foot}/bin/foot -c ${configFile}";
         };
       in
       {
@@ -113,10 +124,10 @@
           };
 
           keybindings = {
-            "Mod4+Return" = "exec ${commands.st}";
+            "Mod4+Return" = "exec ${commands.foot}";
             "Mod4+p" = ''
               exec ${pkgs.j4-dmenu-desktop}/bin/j4-dmenu-desktop --no-generic \
-              --term \"${commands.st}\" --dmenu='${pkgs.dmenu}/bin/dmenu -i -l \
+              --term \"${commands.foot}\" --dmenu='${pkgs.dmenu}/bin/dmenu -i -l \
               0 -p ">" -fn "${config.modules.sway.fonts.monospace}-14" -nb \
               "#000000" -nf "#ffffff" -sb "#ffffff" -sf "#000000"'
             '';
@@ -179,7 +190,7 @@
               always = true;
             }
             {
-              command = commands.st;
+              command = commands.foot;
               always = false;
             }
             {
