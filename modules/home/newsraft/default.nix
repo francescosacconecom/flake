@@ -44,7 +44,7 @@
           config.modules.newsraft.feeds
           |> builtins.mapAttrs (
             section: feeds: ''
-              @ ${section} < reload-period 30
+              @ ${section}
               ${
                 (
                   feeds
