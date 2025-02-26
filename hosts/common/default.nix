@@ -1,10 +1,15 @@
 {
+  lib,
   config,
   pkgs,
   ...
 }:
 {
   system.stateVersion = "23.11";
+
+  services.fwupd.enable = true;
+  security.protectKernelImage = true;
+  boot.tmp.cleanOnBoot = true;
 
   users = {
     mutableUsers = false;
@@ -19,7 +24,10 @@
     package = pkgs.iptables;
   };
 
-  environment.defaultPackages = [ ];
+  environment.defaultPackages = lib.mkForce [ ];
+
+  i18n.defaultLocale = "en_GB.UTF-8";
+  time.timeZone = "Europe/Rome";
 
   nix = {
     settings = {
