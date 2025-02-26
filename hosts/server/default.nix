@@ -64,7 +64,6 @@ rec {
         "git" = config.modules.git.stagit.output;
         "notes" = "${config.modules.pandoc.output}/notes";
         "public" = "${inputs.website}/public";
-        "public/francescosaccone.asc" = ../../homes/francesco/home/openpgp.asc;
         "robots.txt" = "${inputs.website}/robots.txt";
       };
       acme = {
