@@ -11,6 +11,6 @@
     ./gpg
     ./newsraft
     ./sway
-    ./vim
+    ./vis
   ];
 }

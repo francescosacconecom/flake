@@ -123,7 +123,7 @@
         monospace = "IBM Plex Mono";
       };
     };
-    vim = {
+    vis = {
       enable = true;
     };
   };
