@@ -22,10 +22,6 @@
     openssh.agent = {
       enable = true;
     };
-    searx = {
-      enable = true;
-      port = 8888;
-    };
     sudo = {
       enable = true;
     };

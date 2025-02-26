@@ -8,7 +8,6 @@
     ./openssh
     ./pandoc
     ./pipewire
-    ./searx
     ./staticWebServer
     ./sudo
     ./tlp
