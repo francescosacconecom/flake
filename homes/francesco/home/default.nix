@@ -137,7 +137,7 @@
     mupdf
     musescore
     nmap
-    nnn
+    noice
     qjackctl
     tor-browser
   ];
