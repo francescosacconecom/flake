@@ -1,4 +1,5 @@
 {
+  lib,
   config,
   pkgs,
   ...
@@ -6,7 +7,10 @@
 {
   users.users."francesco" = {
     description = "Francesco Saccone";
-    hashedPassword = builtins.readFile ./hashedPassword;
+    hashedPassword =
+      ./hashedPassword
+      |> builtins.readFile
+      |> lib.strings.trim;
     isNormalUser = true;
     extraGroups = [
       "audio"
