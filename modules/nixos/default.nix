@@ -2,7 +2,6 @@
 {
   imports = [
     ./bind
-    ./chromium
     ./git
     ./networkmanager
     ./openssh

@@ -6,9 +6,6 @@
 }:
 {
   modules = {
-    chromium = {
-      enable = true;
-    };
     wayland = {
       enable = true;
     };
