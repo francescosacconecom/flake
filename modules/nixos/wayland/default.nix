@@ -8,7 +8,9 @@
 {
   options.modules.wayland = {
     enable = lib.mkOption {
-      description = "Whether to enable Ly and Sway, effectively enabling Wayland.";
+      description = ''
+        Whether to enable Ly and Sway, effectively enabling Wayland.
+      '';
       default = false;
       type = lib.types.bool;
     };

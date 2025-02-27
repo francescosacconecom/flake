@@ -22,11 +22,12 @@
     networking.networkmanager =
       let
         inherit (config.modules.networkmanager) randomiseMacAddress;
+        macAddress = if randomiseMacAddress then "random" else "preserve";
       in
       {
         enable = true;
-        wifi.macAddress = if randomiseMacAddress then "random" else "preserve";
-        ethernet.macAddress = if randomiseMacAddress then "random" else "preserve";
+        wifi = { inherit macAddress; };
+        ethernet = { inherit macAddress; };
       };
   };
 }

@@ -83,30 +83,43 @@
             ExecStart =
               let
                 inherit (config.modules.pandoc) input output components;
+
+                preMainHtml = pkgs.writeFile "pre" ''
+                  <!DOCTYPE html>
+                  <html>
+                    <head>
+                      ${builtins.readFile components.head}
+                    </head>
+                    <body>
+                      <header>
+                        ${builtins.readFile components.header}
+                      </header>
+                      <main>
+                '';
+                postMainHtml = pkgs.writeFile "post" ''
+                      </main>
+                      <footer>
+                        ${builtins.readFile components.footer}
+                      </footer>
+                    </body>
+                  </html>
+                '';
+
                 script = pkgs.writeShellScriptBin "pandoc" ''
-                  ${pkgs.findutils}/bin/find "${input}" -name '*.md' | while read -r md_file; do
+                  ${pkgs.findutils}/bin/find "${input}" -name '*.md' | while \
+                  read -r md_file; do
                     relative_path="${"$"}{md_file#${input}/}"
                     output_file="${output}/${"$"}{relative_path%.md}.html"
 
-                    ${pkgs.coreutils}/bin/mkdir -p "$(${pkgs.coreutils}/bin/dirname "$output_file")"
+                    ${pkgs.coreutils}/bin/mkdir -p \
+                      "$(${pkgs.coreutils}/bin/dirname "$output_file")"
 
-                    ${pkgs.coreutils}/bin/echo -n "<!DOCTYPE html>"                    > "$output_file"
-                    ${pkgs.coreutils}/bin/echo -n "<html>"                            >> "$output_file"
-                    ${pkgs.coreutils}/bin/echo -n "<head>"                            >> "$output_file"
-                    ${pkgs.coreutils}/bin/cat "${components.head}"                    >> "$output_file"
-                    ${pkgs.coreutils}/bin/echo -n "</head>"                           >> "$output_file"
-                    ${pkgs.coreutils}/bin/echo -n "<body>"                            >> "$output_file"
-                    ${pkgs.coreutils}/bin/echo -n "<header>"                          >> "$output_file"
-                    ${pkgs.coreutils}/bin/cat "${components.header}"                  >> "$output_file"
-                    ${pkgs.coreutils}/bin/echo -n "</header>"                         >> "$output_file"
-                    ${pkgs.coreutils}/bin/echo -n "<main>"                            >> "$output_file"
-                    ${pkgs.pandoc}/bin/pandoc -f markdown -t html "$md_file" --mathml >> "$output_file"
-                    ${pkgs.coreutils}/bin/echo -n "</main>"                           >> "$output_file"
-                    ${pkgs.coreutils}/bin/echo -n "<footer>"                          >> "$output_file"
-                    ${pkgs.coreutils}/bin/cat "${components.footer}"                  >> "$output_file"
-                    ${pkgs.coreutils}/bin/echo -n "</footer>"                         >> "$output_file"
-                    ${pkgs.coreutils}/bin/echo -n "</body>"                           >> "$output_file"
-                    ${pkgs.coreutils}/bin/echo -n "</html>"                           >> "$output_file"
+                    ${pkgs.coreutils}/bin/cat ${preMainHtml} > $output_file
+                    
+                    ${pkgs.pandoc}/bin/pandoc -f markdown -t html "$md_file" \
+                    --mathml >> "$output_file"
+                    
+                    ${pkgs.coreutils}/bin/cat ${postMainHtml} >> $output_file
                   done
                 '';
               in
@@ -114,13 +127,12 @@
           };
         };
       };
-      timers = {
+      paths = {
         pandoc = {
           enable = true;
           wantedBy = [ "multi-user.target" ];
-          timerConfig = {
-            OnCalendar = "*:0/1";
-            Persistent = true;
+          pathConfig = {
+            PathModified = config.modules.pandoc.input;
           };
         };
       };

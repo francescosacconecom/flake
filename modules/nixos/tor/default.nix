@@ -26,7 +26,9 @@
         |> lib.types.attrsOf;
     };
     servicesDirectory = lib.mkOption {
-      description = "The directory where the each service configuration will reside.";
+      description = ''
+        The directory where the each service configuration will reside.
+      '';
       default = "/var/lib/tor/onion";
       readOnly = true;
       type = lib.types.uniq lib.types.path;

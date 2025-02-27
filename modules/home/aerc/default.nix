@@ -44,7 +44,10 @@
         type = lib.types.nullOr lib.types.int;
       };
       passwordCommand = lib.mkOption {
-        description = "The command which returns the password to login to the email account.";
+        description = ''
+          The command which returns the password to login to the email
+          account.
+        '';
         type = lib.types.uniq lib.types.str;
       };
       realName = lib.mkOption {
@@ -78,7 +81,10 @@
         viewer.pager = "${pkgs.less}/bin/less --clear-screen";
         compose.editor = "${pkgs.nano}/bin/nano";
         filters = {
-          "text/plain" = "${pkgs.coreutils}/bin/fold -s -w 80 | ${pkgs.ccze}/bin/ccze --mode=ansi --raw-ansi";
+          "text/plain" = ''
+            ${pkgs.coreutils}/bin/fold -s -w 80 | ${pkgs.ccze}/bin/ccze \
+            --mode=ansi --raw-ansi
+          '';
           "text/html" = "${pkgs.pandoc}/bin/pandoc -f html -t plain";
         };
       };

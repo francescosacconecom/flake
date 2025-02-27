@@ -19,7 +19,9 @@
     fonts = {
       monospace = lib.mkOption {
         type = lib.types.uniq lib.types.str;
-        description = "The monospace font to be used in Sway and its components.";
+        description = ''
+          The monospace font to be used in Sway and its components.
+        '';
       };
     };
   };
@@ -127,18 +129,30 @@
             "Mod4+Return" = "exec ${commands.foot}";
             "Mod4+p" = ''
               exec ${pkgs.j4-dmenu-desktop}/bin/j4-dmenu-desktop --no-generic \
-              --term \"${commands.foot}\" --dmenu='${pkgs.dmenu}/bin/dmenu -i -l \
-              0 -p ">" -fn "${config.modules.sway.fonts.monospace}-14" -nb \
+              --term \"${commands.foot}\" --dmenu='${pkgs.dmenu}/bin/dmenu -i \
+              -l 0 -p ">" -fn "${config.modules.sway.fonts.monospace}-14" -nb \
               "#000000" -nf "#ffffff" -sb "#ffffff" -sf "#000000"'
             '';
 
-            "XF86AudioRaiseVolume" = "exec ${pkgs.alsa-utils}/bin/amixer set Master 10%+";
-            "XF86AudioLowerVolume" = "exec ${pkgs.alsa-utils}/bin/amixer set Master 10%-";
-            "XF86AudioMute" = "exec ${pkgs.alsa-utils}/bin/amixer set Master toggle";
-            "XF86AudioMicMute" = "exec ${pkgs.alsa-utils}/bin/amixer set Capture toggle";
+            "XF86AudioRaiseVolume" = ''
+              exec ${pkgs.alsa-utils}/bin/amixer set Master 10%+
+            '';
+            "XF86AudioLowerVolume" = ''
+              exec ${pkgs.alsa-utils}/bin/amixer set Master 10%-
+            '';
+            "XF86AudioMute" = ''
+              exec ${pkgs.alsa-utils}/bin/amixer set Master toggle
+            '';
+            "XF86AudioMicMute" = ''
+              exec ${pkgs.alsa-utils}/bin/amixer set Capture toggle
+            '';
 
-            "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%+¬";
-            "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%-";
+            "XF86MonBrightnessUp" = ''
+              exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%+
+            '';
+            "XF86MonBrightnessDown" = ''
+              exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%-
+            '';
 
             "Mod4+q" = "kill";
 

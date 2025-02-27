@@ -1,7 +1,4 @@
 {
-  lib,
-  options,
-  config,
   ...
 }:
 {

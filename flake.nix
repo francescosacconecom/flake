@@ -1,7 +1,5 @@
 {
-  description = ''
-    Francesco Saccone's Nix flake.
-  '';
+  description = "Francesco Saccone's Nix flake.";
 
   inputs = {
     nixpkgs = {
@@ -62,7 +60,12 @@
       );
     in
     {
-      formatter = lib.forEachSystem ({ system }: treefmtEval.${system}.config.build.wrapper);
+      formatter = lib.forEachSystem (
+        {
+          system,
+        }:
+        treefmtEval.${system}.config.build.wrapper
+      );
       checks = lib.forEachSystem (
         { system }:
         {

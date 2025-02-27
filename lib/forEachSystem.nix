@@ -1,1 +1,5 @@
-{ nixpkgs, systems }: f: (system: f { inherit system; }) |> nixpkgs.lib.genAttrs systems
+{
+  nixpkgs,
+  systems,
+}:
+f: (system: f { inherit system; }) |> nixpkgs.lib.genAttrs systems

@@ -24,7 +24,10 @@
       type = lib.types.uniq lib.types.path;
     };
     symlinks = lib.mkOption {
-      description = "For each symlink name, which will be created in the root directory, its target.";
+      description = ''
+        For each symlink name, which will be created in the root directory, its
+        target.
+      '';
       default = { };
       type = lib.types.attrsOf lib.types.path;
     };
@@ -54,19 +57,29 @@
           serviceConfig =
             let
               permissions = pkgs.writeShellScriptBin "permissions" ''
-                ${pkgs.coreutils}/bin/chmod -R g+rwx ${config.modules.staticWebServer.directory}
+                ${pkgs.coreutils}/bin/chmod -R g+rwx \
+                ${config.modules.staticWebServer.directory}
               '';
               clean = pkgs.writeShellScriptBin "clean" ''
-                ${pkgs.coreutils}/bin/rm -rf ${config.modules.staticWebServer.directory}/*
+                ${pkgs.coreutils}/bin/rm -rf \
+                ${config.modules.staticWebServer.directory}/*
               '';
               symlinks =
                 config.modules.staticWebServer.symlinks
                 |> builtins.mapAttrs (
-                  name: target: ''
-                    ${pkgs.coreutils}/bin/mkdir -p ${config.modules.staticWebServer.directory}/${builtins.dirOf name}
-                    ${pkgs.coreutils}/bin/ln -sf ${target} ${config.modules.staticWebServer.directory}/${name}
+                  name: target:
+                  let
+                    inherit (config.modules.staticWebServer) directory;
+                  in
+                  ''
+                    ${pkgs.coreutils}/bin/mkdir -p \
+                    ${directory}/${builtins.dirOf name}
 
-                    ${pkgs.coreutils}/bin/chown -Rh static-web-server:www ${config.modules.staticWebServer.directory}/${name}
+                    ${pkgs.coreutils}/bin/ln -sf ${target} \
+                    ${directory}/${name}
+
+                    ${pkgs.coreutils}/bin/chown -Rh static-web-server:www \
+                    ${directory}/${name}
                   ''
                 )
                 |> builtins.attrValues
@@ -96,6 +109,7 @@
           ];
           serviceConfig =
             let
+              inherit (config.modules.staticWebServer) tls;
               script = pkgs.writeShellScriptBin "script" ''
                 ${pkgs.static-web-server}/bin/static-web-server \
                   --port 80 \
@@ -103,7 +117,7 @@
                   --root ${config.modules.staticWebServer.directory} \
                   --index-files index.html \
                   --ignore-hidden-files false \
-                  ${if config.modules.staticWebServer.tls.enable then "--https-redirect" else ";"}
+                  ${if tls.enable then "--https-redirect" else ";"}
               '';
             in
             {

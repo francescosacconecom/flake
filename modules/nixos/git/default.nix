@@ -18,7 +18,9 @@
       type = lib.types.bool;
     };
     directory = lib.mkOption {
-      description = "The directory where specified bare repositories are created.";
+      description = ''
+        The directory where specified bare repositories are created.
+      '';
       default = "/srv/git";
       readOnly = true;
       type = lib.types.uniq lib.types.path;
@@ -38,7 +40,10 @@
               type = lib.types.uniq lib.types.str;
             };
             baseUrl = lib.mkOption {
-              description = "The base URL used to clone the repository through the Git protocol.";
+              description = ''
+                The base URL used to clone the repository through the Git
+                protocol.
+              '';
               type = lib.types.uniq lib.types.str;
             };
           };
@@ -86,11 +91,17 @@
                     baseUrl,
                   }:
                   ''
-                    ${pkgs.git}/bin/git init -q --bare -b master ${config.modules.git.directory}/${name}
+                    ${pkgs.git}/bin/git init -q --bare -b master \
+                    ${config.modules.git.directory}/${name}
 
-                    ${pkgs.coreutils}/bin/echo "${description}" > ${config.modules.git.directory}/${name}/description
-                    ${pkgs.coreutils}/bin/echo "${owner}" > ${config.modules.git.directory}/${name}/owner
-                    ${pkgs.coreutils}/bin/echo "git://${baseUrl}/${name}" > ${config.modules.git.directory}/${name}/url
+                    ${pkgs.coreutils}/bin/echo "${description}" > \
+                    ${config.modules.git.directory}/${name}/description
+
+                    ${pkgs.coreutils}/bin/echo "${owner}" > \
+                    ${config.modules.git.directory}/${name}/owner
+
+                    ${pkgs.coreutils}/bin/echo "git://${baseUrl}/${name}" > \
+                    ${config.modules.git.directory}/${name}/url
                   ''
                 )
                 |> builtins.attrValues

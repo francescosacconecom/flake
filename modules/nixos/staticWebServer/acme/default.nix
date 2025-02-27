@@ -13,7 +13,9 @@
       type = lib.types.bool;
     };
     directory = lib.mkOption {
-      description = "The directory containing fetched Let's Encrypt certificates.";
+      description = ''
+        The directory containing fetched Let's Encrypt certificates.
+      '';
       default = "/etc/letsencrypt/live";
       readOnly = true;
       type = lib.types.uniq lib.types.path;
@@ -46,13 +48,15 @@
             after = [ "static-web-server-setup.service" ];
             serviceConfig =
               let
+                domains = [ acme.domain ] ++ acme.extraDomains;
+
                 script = pkgs.writeShellScriptBin "script" ''
                   if ${pkgs.certbot}/bin/certbot certificates \
                   | ${pkgs.gnugrep}/bin/grep -q "No certificates"; then
                     ${pkgs.certbot}/bin/certbot certonly --quiet --webroot \
                     --agree-tos --email ${acme.email} \
                     -w ${config.modules.staticWebServer.directory} \
-                    -d ${builtins.concatStringsSep " -d " ([ acme.domain ] ++ acme.extraDomains)}
+                    -d ${builtins.concatStringsSep " -d " domains}
                   else
                     ${pkgs.certbot}/bin/certbot renew --quiet
                   fi

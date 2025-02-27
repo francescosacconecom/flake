@@ -16,16 +16,23 @@
     };
     listen = {
       enable = lib.mkOption {
-        description = "Where to listen for SSH connection requests at the given port.";
+        description = ''
+          Where to listen for SSH connection requests at the given port.
+        '';
         default = false;
         type = lib.types.bool;
       };
       port = lib.mkOption {
-        description = "The port which listens for the SSH connection requests.";
+        description = ''
+          The port which listens for the SSH connection requests.
+        '';
         type = lib.types.uniq lib.types.int;
       };
       authorizedKeyFiles = lib.mkOption {
-        description = "For each user, a list of public SSH key files that are authorized to connect.";
+        description = ''
+          For each user, a list of public SSH key files that are authorized to
+          connect.
+        '';
         type = lib.types.listOf lib.types.path |> lib.types.attrsOf;
       };
     };

@@ -69,7 +69,14 @@
               inherit (config.modules.bind) domain;
               subdomain = if name != "@" then "${name}." else "";
             in
-            "${subdomain}${domain}. ${builtins.toString ttl} ${class} ${type} ${data}"
+            [
+              "${subdomain}${domain}."
+              (builtins.toString ttl)
+              class
+              type
+              data
+            ]
+            |> builtins.concatStringsSep " "
           )
           |> builtins.concatStringsSep "\n"
           |> pkgs.writeText "${config.modules.bind.domain}";

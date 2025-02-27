@@ -76,10 +76,14 @@ rec {
       };
       tls = {
         enable = true;
-        pemFiles = [
-          "${config.modules.staticWebServer.acme.directory}/${acme.domain}/fullchain.pem"
-          "${config.modules.staticWebServer.acme.directory}/${acme.domain}/privkey.pem"
-        ];
+        pemFiles =
+          let
+            inherit (config.modules.staticWebServer.acme) directory;
+          in
+          [
+            "${directory}/${acme.domain}/fullchain.pem"
+            "${directory}/${acme.domain}/privkey.pem"
+          ];
       };
     };
     tor = {
