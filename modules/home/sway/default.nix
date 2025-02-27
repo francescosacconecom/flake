@@ -127,12 +127,6 @@
 
           keybindings = {
             "Mod4+Return" = "exec ${commands.foot}";
-            "Mod4+p" = ''
-              exec ${pkgs.j4-dmenu-desktop}/bin/j4-dmenu-desktop --no-generic \
-              --term \"${commands.foot}\" --dmenu='${pkgs.dmenu}/bin/dmenu -i \
-              -l 0 -p ">" -fn "${config.modules.sway.fonts.monospace}-14" -nb \
-              "#000000" -nf "#ffffff" -sb "#ffffff" -sf "#000000"'
-            '';
 
             "XF86AudioRaiseVolume" = ''
               exec ${pkgs.alsa-utils}/bin/amixer set Master 10%+
