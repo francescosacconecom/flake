@@ -131,8 +131,9 @@
   home.packages = with pkgs; [
     ardour
     helvum
-    libreoffice
     imv
+    libreoffice
+    lynx
     mpv
     mupdf
     musescore
