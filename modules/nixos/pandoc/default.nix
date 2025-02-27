@@ -84,7 +84,7 @@
               let
                 inherit (config.modules.pandoc) input output components;
 
-                preMainHtml = pkgs.writeFile "pre" ''
+                preMainHtml = pkgs.writeText "pre" ''
                   <!DOCTYPE html>
                   <html>
                     <head>
@@ -96,7 +96,7 @@
                       </header>
                       <main>
                 '';
-                postMainHtml = pkgs.writeFile "post" ''
+                postMainHtml = pkgs.writeText "post" ''
                       </main>
                       <footer>
                         ${builtins.readFile components.footer}
