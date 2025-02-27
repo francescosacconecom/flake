@@ -82,7 +82,7 @@
         compose.editor = "${pkgs.nano}/bin/nano";
         filters = {
           "text/plain" = ''
-            ${pkgs.coreutils}/bin/fold -s -w 80 | ${pkgs.ccze}/bin/ccze \
+            ${pkgs.ccze}/bin/ccze | ${pkgs.coreutils}/bin/fold -s -w 80 \
             --mode=ansi --raw-ansi
           '';
           "text/html" = "${pkgs.pandoc}/bin/pandoc -f html -t plain";
