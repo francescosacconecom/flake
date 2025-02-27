@@ -48,8 +48,8 @@
           let
             script = pkgs.writeShellScriptBin "script" ''
               ${pkgs.coreutils}/bin/cat \
-              ${builtins.concatStringsSep " " tls.pemFiles} \
-                > /var/lib/hitch/full.pem
+              ${builtins.concatStringsSep " " tls.pemFiles} > \
+                /var/lib/hitch/full.pem
 
               ${pkgs.hitch}/bin/hitch \
                 --backend [localhost]:80 \
