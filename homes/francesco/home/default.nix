@@ -187,7 +187,7 @@
     helvum
     imv
     libreoffice
-    lynx
+    librewolf
     mpv
     mupdf
     musescore
