@@ -44,6 +44,7 @@
             "email/francesco"
             "routers/home"
             "web/gandi"
+            "web/github"
             "web/google"
             "web/infomaniak"
             "web/microsoft-teams"
