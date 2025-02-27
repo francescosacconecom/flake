@@ -7,7 +7,11 @@
 {
   users.users."francesco" = {
     description = "Francesco Saccone";
-    hashedPassword = builtins.readFile ./hashedPassword |> lib.strings.trim;
+    hashedPassword =
+      let
+        hashedPassword = builtins.readFile ./hashedPassword.txt;
+      in
+      lib.strings.trim hashedPassword;
     isNormalUser = true;
     extraGroups = [
       "audio"

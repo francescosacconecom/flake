@@ -17,7 +17,9 @@
       "LICENSE"
       "*.asc"
       "*.gpg"
+      "*.lua"
       "*.pub"
+      "*.txt"
       "*.vim"
     ];
   };
