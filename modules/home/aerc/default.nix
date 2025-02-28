@@ -81,10 +81,7 @@
         viewer.pager = "${pkgs.less}/bin/less --clear-screen";
         compose.editor = "${pkgs.nano}/bin/nano";
         filters = {
-          "text/plain" = ''
-            ${pkgs.ccze}/bin/ccze --mode=ansi --raw-ansi |\
-            ${pkgs.coreutils}/bin/fold -s -w 80
-          '';
+          "text/plain" = "${pkgs.ccze}/bin/ccze --mode=ansi --raw-ansi";
           "text/html" = "${pkgs.pandoc}/bin/pandoc -f html -t plain";
         };
       };
