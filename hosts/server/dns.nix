@@ -1,26 +1,54 @@
 domain:
 let
-  webServer = {
-    ipv4 = "193.108.52.52";
-    ipv6 = "2001:1600:13:101::16e3";
-  };
-
   ttl = 3600;
 in
-[
+(
+  rec {
+    "@" = www;
+    ns1 = www;
+    www = {
+      ipv4 = "193.108.52.52";
+      ipv6 = "2001:1600:13:101::16e3";
+    };
+  }
+  |> builtins.mapAttrs (
+    name:
+    { ipv4, ipv6 }:
+    [
+      {
+        inherit name;
+        inherit ttl;
+        class = "IN";
+        type = "A";
+        data = ipv4;
+      }
+      {
+        inherit name;
+        inherit ttl;
+        class = "IN";
+        type = "AAAA";
+        data = ipv6;
+      }
+    ]
+  )
+  |> builtins.attrValues
+  |> builtins.concatLists
+)
+++ [
   {
     name = "@";
     inherit ttl;
     class = "IN";
     type = "SOA";
     data = ''
-      ns1.${domain}. admin.${domain}. (
-            2021090101
-            900
-            900
-            2592000
-            900
-          )'';
+      ns1.${domain}. francesco.${domain}. (
+        2021090101
+        900
+        900
+        2592000
+        900
+      )
+    '';
   }
   {
     name = "@";
@@ -28,48 +56,6 @@ in
     class = "IN";
     type = "NS";
     data = "ns1.${domain}.";
-  }
-  {
-    name = "ns1";
-    inherit ttl;
-    class = "IN";
-    type = "A";
-    data = webServer.ipv4;
-  }
-  {
-    name = "ns1";
-    inherit ttl;
-    class = "IN";
-    type = "AAAA";
-    data = webServer.ipv6;
-  }
-  {
-    name = "@";
-    inherit ttl;
-    class = "IN";
-    type = "A";
-    data = webServer.ipv4;
-  }
-  {
-    name = "@";
-    inherit ttl;
-    class = "IN";
-    type = "AAAA";
-    data = webServer.ipv6;
-  }
-  {
-    name = "www";
-    inherit ttl;
-    class = "IN";
-    type = "A";
-    data = webServer.ipv4;
-  }
-  {
-    name = "www";
-    inherit ttl;
-    class = "IN";
-    type = "AAAA";
-    data = webServer.ipv6;
   }
   {
     name = "@";
@@ -131,7 +117,7 @@ in
         "v=DMARC1;"
         "p=reject;"
         "pct=100;"
-        "rua=mailto:admin@${domain};";
+        "rua=mailto:francesco@${domain};";
       )
     '';
   }
