@@ -185,6 +185,7 @@
 
   home.packages = with pkgs; [
     ardour
+    dig
     helvum
     imv
     libreoffice
