@@ -55,11 +55,28 @@
         "type": "github"
       }
     },
+    "password-store": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1740919019,
+        "narHash": "sha256-X5fzYLp9TSLDHHaZn/yeBEIsUnoUL6CWNQXbj1bcSMY=",
+        "ref": "refs/heads/master",
+        "rev": "7baf467be43071bdf63de20f7933778b62139436",
+        "revCount": 1,
+        "type": "git",
+        "url": "git://francescosaccone.com/password-store"
+      },
+      "original": {
+        "type": "git",
+        "url": "git://francescosaccone.com/password-store"
+      }
+    },
     "root": {
       "inputs": {
         "disko": "disko",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
+        "password-store": "password-store",
         "treefmt-nix": "treefmt-nix",
         "website": "website"
       }

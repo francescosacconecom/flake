@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  inputs,
   ...
 }:
 {
@@ -37,68 +38,10 @@
         fingerprint = "2BE025D27B449E55B320C44209F39C4E70CB2C24";
         file = ./openpgp.asc;
       };
-      pass = {
-        enable = true;
-        passwords =
-          [
-            "email/francesco"
-            "routers/home"
-            "web/gandi"
-            "web/github"
-            "web/google"
-            "web/infomaniak"
-            "web/microsoft-teams"
-            "web/miur"
-            "web/mxroute"
-            "web/myfitp"
-            "web/nexi"
-            "web/thomann"
-            "wifi/home"
-          ]
-          |> builtins.map (
-            name:
-            let
-              otp = ./pass + "/${name}/otp.gpg";
-              password = ./pass + "/${name}/password.gpg";
-              username = ./pass + "/${name}/username.gpg";
-            in
-            (
-              if builtins.pathExists otp then
-                [
-                  {
-                    name = "${name}/otp";
-                    value = otp;
-                  }
-                ]
-              else
-                [ ]
-            )
-            ++ (
-              if builtins.pathExists password then
-                [
-                  {
-                    name = "${name}/password";
-                    value = password;
-                  }
-                ]
-              else
-                [ ]
-            )
-            ++ (
-              if builtins.pathExists username then
-                [
-                  {
-                    name = "${name}/username";
-                    value = username;
-                  }
-                ]
-              else
-                [ ]
-            )
-          )
-          |> builtins.concatLists
-          |> builtins.listToAttrs;
-      };
+    };
+    pass = {
+      enable = true;
+      passwordStoreDirectory = inputs.password-store;
     };
     newsraft = {
       enable = true;

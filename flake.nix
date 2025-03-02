@@ -17,6 +17,10 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    password-store = {
+      url = "git://francescosaccone.com/password-store";
+      flake = false;
+    };
     website = {
       url = "git://francescosaccone.com/website";
       flake = false;
