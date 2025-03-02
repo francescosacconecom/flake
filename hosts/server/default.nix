@@ -17,18 +17,27 @@ rec {
     };
     git = {
       enable = true;
-      repositories = {
-        flake = {
-          description = "Francesco Saccone's Nix flake.";
-          owner = "Francesco Saccone";
-          baseUrl = networking.domain;
-        };
-        website = {
-          description = "Francesco Saccone's website content.";
-          owner = "Francesco Saccone";
-          baseUrl = networking.domain;
-        };
-      };
+      repositories =
+        {
+          flake = {
+            description = "Francesco Saccone's Nix flake.";
+          };
+          password-store = {
+            description = "Francesco Saccone's password store.";
+          };
+          website = {
+            description = "Francesco Saccone's website content.";
+          };
+        }
+        |> builtins.mapAttrs (
+          name:
+          { description }:
+          {
+            inherit description;
+            owner = "Francesco Saccone";
+            baseUrl = networking.domain;
+          }
+        );
       daemon = {
         enable = true;
       };
