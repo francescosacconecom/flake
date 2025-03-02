@@ -105,7 +105,8 @@
                   ''
                 )
                 |> builtins.attrValues
-                |> builtins.concatStringsSep "\n";
+                |> builtins.concatStringsSep "\n"
+                |> pkgs.writeShellScriptBin "script";
             in
             {
               User = "git";
