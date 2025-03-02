@@ -44,7 +44,7 @@ rec {
       stagit = {
         enable = true;
         baseUrl = "https://${networking.domain}/git";
-        iconPng = "${inputs.website}/icon.png";
+        iconPng = "${inputs.website}/public/icon.png";
       };
     };
     openssh.listen = {
