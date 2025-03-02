@@ -44,7 +44,7 @@ rec {
       stagit = {
         enable = true;
         baseUrl = "https://${networking.domain}/git";
-        iconPng = "${inputs.website}/public/icon.png";
+        iconPng = "${inputs.website}/public/icon/32.png";
       };
     };
     openssh.listen = {
@@ -69,11 +69,16 @@ rec {
     staticWebServer = rec {
       enable = true;
       symlinks = {
-        "index.html" = "${config.modules.pandoc.output}/index.html";
-        "git" = config.modules.git.stagit.output;
-        "notes" = "${config.modules.pandoc.output}/notes";
-        "public" = "${inputs.website}/public";
+        "favicon.ico" = "${inputs.website}/favicon.ico";
         "robots.txt" = "${inputs.website}/robots.txt";
+
+        "index.html" = "${config.modules.pandoc.output}/index.html";
+
+        "notes" = "${config.modules.pandoc.output}/notes";
+
+        "public" = "${inputs.website}/public";
+
+        "git" = config.modules.git.stagit.output;
       };
       acme = {
         enable = true;
