@@ -41,6 +41,7 @@
           stagit = {
             enable = true;
             wantedBy = [ "multi-user.target" ];
+            after = [ "git-repositories.service" ];
             serviceConfig =
               let
                 stagit-repositories =
