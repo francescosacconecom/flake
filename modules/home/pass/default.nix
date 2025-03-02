@@ -42,7 +42,7 @@
       ".password-store" = {
         source = config.modules.pass.passwordStoreDirectory;
       };
-    }
+    };
 
     home.packages = [ pkgs.wl-clipboard-rs ];
   };
