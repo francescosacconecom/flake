@@ -7,6 +7,7 @@
     ./git
     ./gpg
     ./newsraft
+    ./pass
     ./sway
     ./vis
   ];

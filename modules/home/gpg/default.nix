@@ -6,10 +6,6 @@
   ...
 }:
 {
-  imports = [
-    ./pass
-  ];
-
   options.modules.gpg = {
     enable = lib.mkOption {
       description = "Whether to enable GnuPG.";
