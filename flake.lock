@@ -27,11 +27,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1740579671,
-        "narHash": "sha256-Dwt/3KknOQ4bgFG5YjqDT7oWRy27rPpDjAi2P0ok1zw=",
+        "lastModified": 1740845322,
+        "narHash": "sha256-AXEgFj3C0YJhu9k1OhbRhiA6FnDr81dQZ65U3DhaWpw=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "53c587d263f94aaf6a281745923c76bbec62bcf3",
+        "rev": "fcac3d6d88302a5e64f6cb8014ac785e08874c8d",
         "type": "github"
       },
       "original": {
@@ -42,11 +42,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1740596262,
-        "narHash": "sha256-KUxP/XDjdY2zx6+VPY4547GHfVg9X63765+VVhQH56U=",
+        "lastModified": 1740934732,
+        "narHash": "sha256-LPYKd4rDgk9avXnJ/QYYMgFknc9xXx7xHwEu77awIPc=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "d78c245c88509385f209d5e148d78a3c0f59499c",
+        "rev": "2f934679d0efc4d0a340f95ef55bc76e038d04f1",
         "type": "github"
       },
       "original": {
@@ -58,11 +58,11 @@
     "password-store": {
       "flake": false,
       "locked": {
-        "lastModified": 1740922869,
-        "narHash": "sha256-w8EFaKGeEQP3FWHt2GFTGaidkJeTkWvLL/AStIC3uS4=",
+        "lastModified": 1740923677,
+        "narHash": "sha256-uz5K3moVObia358CLMqZsfde5bq4Zwy4X5w9310bJ6M=",
         "ref": "refs/heads/master",
-        "rev": "3048c672dbce13f6ca03c53af9af9df2bb1c16c9",
-        "revCount": 3,
+        "rev": "8d156509cdead199a5b8adde21b67146c81d46d5",
+        "revCount": 5,
         "type": "git",
         "url": "git://francescosaccone.com/password-store"
       },
@@ -104,11 +104,11 @@
     "website": {
       "flake": false,
       "locked": {
-        "lastModified": 1740933055,
-        "narHash": "sha256-z5CCvNJqmSSVl+0mH8yzJ/p+L17TFlp89d0HBfp1Hm4=",
+        "lastModified": 1740934815,
+        "narHash": "sha256-oMHvGvDM3WH9ABn9a6GpQGVGYKC/efd7FpgFVCjfvwI=",
         "ref": "refs/heads/master",
-        "rev": "4897694b2c9d9c06ec34dea4e9c11a33a73182e8",
-        "revCount": 26,
+        "rev": "4e61c72f5d26f5394f7b296939bae9ed0634da7d",
+        "revCount": 28,
         "type": "git",
         "url": "git://francescosaccone.com/website"
       },
