@@ -104,11 +104,11 @@
     "website": {
       "flake": false,
       "locked": {
-        "lastModified": 1740936429,
-        "narHash": "sha256-fXEinPBPoLYs8hh7sSrYgZ3SG4P8ePn8cC8Y16acOk4=",
+        "lastModified": 1740937119,
+        "narHash": "sha256-7kPXKiEICPiYlNf5M1LC7MQADSVNtp0kIF6iDxn4m80=",
         "ref": "refs/heads/master",
-        "rev": "c4f9e8665a3374f0abcbf2e041702ab6a491db38",
-        "revCount": 32,
+        "rev": "b24841c7d38b4960e13962ad6c30808fa780eff3",
+        "revCount": 33,
         "type": "git",
         "url": "git://francescosaccone.com/website"
       },
