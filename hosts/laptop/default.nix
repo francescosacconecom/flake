@@ -8,7 +8,7 @@
   modules = {
     monero = {
       enable = true;
-      mining = { 
+      mining = {
         enable = true;
         address = builtins.concatStringsSep "" [
           "47y5LAtYdpZ4GAE7CMx1soEHjUKzpVQFYM5Pv836FcsZd6k3TFcdvHMAHDpwZgnx"

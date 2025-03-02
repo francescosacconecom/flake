@@ -29,20 +29,20 @@
     users = {
       users = {
         monero = {
-           hashedPassword = "!";
-           isSystemUser = true;
-           group = "monero";
-           createHome = true;
-           home = "/var/lib/monero";
+          hashedPassword = "!";
+          isSystemUser = true;
+          group = "monero";
+          createHome = true;
+          home = "/var/lib/monero";
         };
       };
       groups = {
         monero = { };
       };
     };
-    
+
     environment.systemPackages = [ pkgs.monero-cli ];
-    
+
     services.monero = {
       enable = true;
       dataDir = "/var/lib/monero";
