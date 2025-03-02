@@ -3,6 +3,7 @@
   imports = [
     ./bind
     ./git
+    ./monero
     ./networkmanager
     ./openssh
     ./pandoc
